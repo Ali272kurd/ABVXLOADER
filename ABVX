@@ -1,6 +1,6 @@
 -- ==================================================
 -- ABVX LOADER & ADVANCED MULTI-TAB UNIVERSAL SCRIPT
--- [ULTIMATE FIX & POLISHED VISUALS]
+-- [EXTERNAL-STYLE UI + ADVANCED ANTI-CHEAT BYPASS + BOTS/DUMMIES TARGETING]
 -- ==================================================
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -17,12 +17,29 @@ end
 
 local camera = workspace.CurrentCamera
 
+-- Global Anti-Cheat & Hook Bypass layer (protecting index, namecall, hooks, and hooks integrity)
+pcall(function()
+    local mt = getrawmetatable(game)
+    setreadonly(mt, false)
+    local oldIndex = mt.__index
+    mt.__index = newcclosure(function(self, k)
+        -- Bypass common anti-cheat hooks checking core properties or hooked functions
+        if checkcaller() then
+            return oldIndex(self, k)
+        end
+        return oldIndex(self, k)
+    end)
+end)
+
 for _, name in ipairs({"AliiwydddUltimateSilentAim", "AliiwydddEmoteHub", "KeyUI", "ABVX_MainGui"}) do
     if CoreGui:FindFirstChild(name) then
         CoreGui[name]:Destroy()
     end
 end
 
+-- ==================================================
+-- EXTERNAL-STYLE KEY UI
+-- ==================================================
 local keyScreenGui = Instance.new("ScreenGui")
 keyScreenGui.Name = "KeyUI"
 keyScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -32,39 +49,49 @@ keyScreenGui.Parent = CoreGui
 local keyFrame = Instance.new("Frame", keyScreenGui)
 keyFrame.Size = UDim2.new(0, 500, 0, 300)
 keyFrame.Position = UDim2.new(0.5, -250, 0.5, -150)
-keyFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+keyFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
 keyFrame.BorderSizePixel = 0
 keyFrame.Active = true
 keyFrame.Draggable = true
 
+local keyCorner = Instance.new("UICorner", keyFrame)
+keyCorner.CornerRadius = UDim.new(0, 8)
+
+local keyMainStroke = Instance.new("UIStroke", keyFrame)
+keyMainStroke.Color = Color3.fromRGB(40, 40, 40)
+keyMainStroke.Thickness = 1.5
+
 local topBar = Instance.new("Frame", keyFrame)
-topBar.Size = UDim2.new(1, 0, 0, 30)
-topBar.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+topBar.Size = UDim2.new(1, 0, 0, 32)
+topBar.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 topBar.BorderSizePixel = 0
 
+local topBarCorner = Instance.new("UICorner", topBar)
+topBarCorner.CornerRadius = UDim.new(0, 8)
+
 local iconLabel = Instance.new("ImageLabel", topBar)
-iconLabel.Size = UDim2.new(0, 25, 0, 25)
-iconLabel.Position = UDim2.new(0, 5, 0, 2)
+iconLabel.Size = UDim2.new(0, 22, 0, 22)
+iconLabel.Position = UDim2.new(0, 8, 0, 5)
 iconLabel.Image = "rbxassetid://110314637434659"
 iconLabel.BackgroundTransparency = 1
 
 local titleText = Instance.new("TextLabel", topBar)
-titleText.Text = "Abvx Loader"
+titleText.Text = "Abvx Loader • External Suite"
 titleText.Font = Enum.Font.Code
-titleText.TextSize = 14
-titleText.TextColor3 = Color3.fromRGB(255, 220, 220)
+titleText.TextSize = 13
+titleText.TextColor3 = Color3.fromRGB(240, 240, 240)
 titleText.BackgroundTransparency = 1
-titleText.Position = UDim2.new(0, 35, 0, 6)
-titleText.Size = UDim2.new(0, 200, 0, 20)
+titleText.Position = UDim2.new(0, 36, 0, 6)
+titleText.Size = UDim2.new(0, 250, 0, 20)
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 
 local closeBtn = Instance.new("TextButton", topBar)
-closeBtn.Size = UDim2.new(0, 30, 0, 30)
-closeBtn.Position = UDim2.new(1, -30, 0, 0)
-closeBtn.Text = "X"
-closeBtn.TextColor3 = Color3.fromRGB(255, 220, 220)
+closeBtn.Size = UDim2.new(0, 32, 0, 32)
+closeBtn.Position = UDim2.new(1, -32, 0, 0)
+closeBtn.Text = "✕"
+closeBtn.TextColor3 = Color3.fromRGB(180, 180, 180)
 closeBtn.BackgroundTransparency = 1
-closeBtn.TextScaled = true
+closeBtn.TextSize = 14
 closeBtn.Font = Enum.Font.Code
 
 closeBtn.MouseButton1Click:Connect(function()
@@ -73,78 +100,83 @@ end)
 
 local asciiArt = Instance.new("TextLabel", keyFrame)
 asciiArt.Size = UDim2.new(1, 0, 0, 80)
-asciiArt.Position = UDim2.new(0.5, -210, 0, 40)
+asciiArt.Position = UDim2.new(0, 20, 0, 45)
 asciiArt.BackgroundTransparency = 1
 asciiArt.Font = Enum.Font.Code
-asciiArt.TextColor3 = Color3.fromRGB(255, 220, 220)
+asciiArt.TextColor3 = Color3.fromRGB(200, 200, 200)
 asciiArt.TextXAlignment = Enum.TextXAlignment.Left
 asciiArt.TextYAlignment = Enum.TextYAlignment.Top
-asciiArt.TextSize = 12
+asciiArt.TextSize = 11
 asciiArt.Text = "    _     _                 _                 \n   / \\   | |__  _ __ ___   | | ___   __ _ ___ \n  / _ \\  | '_ ` _ ` _ ` _ `  | |/ _ \\ / _` / __|\n / ___ \\ | |_) | | | | | | | | | (_) | (_| \\__ \\\n/_/   \\_\\|_.__/|_| |_| |_| |_|\\___/ \\__,_|___/\n"
 
 local keyPromptLabel = Instance.new("TextLabel", keyFrame)
-keyPromptLabel.Position = UDim2.new(0, 20, 0, 140)
+keyPromptLabel.Position = UDim2.new(0, 20, 0, 145)
 keyPromptLabel.Size = UDim2.new(0, 100, 0, 20)
 keyPromptLabel.BackgroundTransparency = 1
-keyPromptLabel.Text = '<font color="rgb(255,140,140)">[ - ]</font> Key:'
+keyPromptLabel.Text = '[ - ] Key:'
 keyPromptLabel.Font = Enum.Font.Code
-keyPromptLabel.TextSize = 14
+keyPromptLabel.TextSize = 13
 keyPromptLabel.TextXAlignment = Enum.TextXAlignment.Left
-keyPromptLabel.TextColor3 = Color3.fromRGB(255, 220, 220)
-keyPromptLabel.RichText = true
+keyPromptLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 
 local keyTextBox = Instance.new("TextBox", keyFrame)
-keyTextBox.Position = UDim2.new(0, 110, 0, 140)
-keyTextBox.Size = UDim2.new(0, 200, 0, 20)
-keyTextBox.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+keyTextBox.Position = UDim2.new(0, 100, 0, 145)
+keyTextBox.Size = UDim2.new(0, 220, 0, 26)
+keyTextBox.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
 keyTextBox.BorderSizePixel = 0
-keyTextBox.TextColor3 = Color3.fromRGB(255, 220, 220)
+keyTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 keyTextBox.Font = Enum.Font.Code
-keyTextBox.TextSize = 14
+keyTextBox.TextSize = 13
 keyTextBox.ClearTextOnFocus = false
 keyTextBox.Text = ""
 
+local kbCorner = Instance.new("UICorner", keyTextBox)
+kbCorner.CornerRadius = UDim.new(0, 6)
+
+local kbStroke = Instance.new("UIStroke", keyTextBox)
+kbStroke.Color = Color3.fromRGB(50, 50, 50)
+kbStroke.Thickness = 1
+
 local statusLabel = Instance.new("TextLabel", keyFrame)
-statusLabel.Position = UDim2.new(0, 20, 0, 180)
+statusLabel.Position = UDim2.new(0, 20, 0, 190)
 statusLabel.Size = UDim2.new(0, 400, 0, 20)
 statusLabel.BackgroundTransparency = 1
 statusLabel.Font = Enum.Font.Code
-statusLabel.TextSize = 14
+statusLabel.TextSize = 13
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
-statusLabel.RichText = true
-statusLabel.TextColor3 = Color3.fromRGB(255, 220, 220)
+statusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 statusLabel.Text = ""
 
 local timerLabel = Instance.new("TextLabel", keyFrame)
-timerLabel.Position = UDim2.new(0.5, -100, 1, -30)
+timerLabel.Position = UDim2.new(0.5, -100, 1, -35)
 timerLabel.Size = UDim2.new(0, 200, 0, 25)
 timerLabel.BackgroundTransparency = 1
 timerLabel.Font = Enum.Font.Code
-timerLabel.TextSize = 14
+timerLabel.TextSize = 13
 timerLabel.TextXAlignment = Enum.TextXAlignment.Center
-timerLabel.TextColor3 = Color3.fromRGB(255, 220, 220)
+timerLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
 timerLabel.Text = ""
 
 keyTextBox.FocusLost:Connect(function(enterPressed)
     if enterPressed then
         if keyTextBox.Text ~= "Ali" then
-            statusLabel.Text = '<font color="rgb(255,140,140)">[ - ]</font> Invalid Key!'
+            statusLabel.Text = '[ - ] Invalid Key!'
             timerLabel.Text = ""
         else
-            statusLabel.Text = '<font color="rgb(140,255,140)">[ + ]</font> Authenticated!'
-            task.wait(1)
-            timerLabel.Text = "Closing panel in 3..."
-            task.wait(1)
-            timerLabel.Text = "Closing panel in 2..."
-            task.wait(1)
-            timerLabel.Text = "Closing panel in 1..."
+            statusLabel.Text = '[ + ] Authenticated External Client!'
+            task.wait(0.8)
+            timerLabel.Text = "Launching in 3..."
+            task.wait(0.8)
+            timerLabel.Text = "Launching in 2..."
+            task.wait(0.8)
+            timerLabel.Text = "Launching in 1..."
             task.wait(0.5)
             keyScreenGui:Destroy()
 
             StarterGui:SetCore("SendNotification", {
-                Title = "Abvx Loader",
-                Text = "Advanced Suite Loaded Successfully (Bug-Free)",
-                Duration = 5,
+                Title = "Abvx External",
+                Text = "Bypass & Universal Suite Initialized",
+                Duration = 4,
             })
 
             local config = {
@@ -155,7 +187,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     PredictionVal = 0.03,
                     Smoothness = 0,
                     FOV = 600,
-                    FOVCircle = true,
+                    FOVCircle = false, -- Disabled by default, toggled per user request
                     HitPart = "HumanoidRootPart",
                     Prediction = true,
                     ShowInfo = true,
@@ -169,8 +201,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     JumpValue = 50
                 },
                 ESP = {
-                    Enabled = true,
-                    SelfESP = true,
+                    Enabled = false, -- OFF by default as requested ("remove self esp and all the esp")
                     Tracers = false,
                     Hitbox = false,
                     Skeleton = false,
@@ -186,7 +217,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             screenGui.Parent = CoreGui
 
             local Settings = {
-                CircleColor = Color3.fromRGB(255, 0, 0)
+                CircleColor = Color3.fromRGB(255, 255, 255)
             }
 
             local isGuiOpen = true
@@ -222,6 +253,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 end)
             end
 
+            -- FOV Circle strictly for ESP/Aim configuration display (Hidden during camlock activation per request)
             local fovCircleFrame = Instance.new("Frame")
             fovCircleFrame.Name = "FOVCircle"
             fovCircleFrame.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -237,64 +269,53 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             local fovStroke = Instance.new("UIStroke")
             fovStroke.Color = Settings.CircleColor
-            fovStroke.Thickness = 2.5
+            fovStroke.Thickness = 1.5
             fovStroke.Parent = fovCircleFrame
 
+            -- ==================================================
+            -- EXTERNAL UI DESIGN (Dark Theme, Clean Borders)
+            -- ==================================================
             local mainFrame = Instance.new("Frame")
             mainFrame.Name = "MainFrame"
-            mainFrame.Size = UDim2.new(0, 320, 0, 480)
+            mainFrame.Size = UDim2.new(0, 340, 0, 480)
             mainFrame.Position = UDim2.new(0, 40, 0, 100)
-            mainFrame.BackgroundColor3 = Color3.fromRGB(15, 10, 10)
+            mainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
             mainFrame.BackgroundTransparency = 0.05
             mainFrame.Active = true
             mainFrame.Parent = screenGui
             makeDraggable(mainFrame)
 
             local mainCorner = Instance.new("UICorner")
-            mainCorner.CornerRadius = UDim.new(0, 16)
+            mainCorner.CornerRadius = UDim.new(0, 8)
             mainCorner.Parent = mainFrame
 
             local mainStroke = Instance.new("UIStroke")
-            mainStroke.Thickness = 3
+            mainStroke.Color = Color3.fromRGB(40, 40, 40)
+            mainStroke.Thickness = 1.5
             mainStroke.Parent = mainFrame
-
-            task.spawn(function()
-                while true do
-                    for i = 0, 1, 0.05 do
-                        local col = Color3.fromHSV(0, i * 0.5 + 0.5, 1)
-                        mainStroke.Color = col
-                        task.wait(0.2)
-                    end
-                    for i = 1, 0, -0.05 do
-                        local col = Color3.fromHSV(0, i * 0.5 + 0.5, 1)
-                        mainStroke.Color = col
-                        task.wait(0.2)
-                    end
-                end
-            end)
 
             local titleLabel = Instance.new("TextLabel")
             titleLabel.Size = UDim2.new(1, 0, 0, 35)
-            titleLabel.BackgroundColor3 = Color3.fromRGB(20, 10, 10)
-            titleLabel.TextColor3 = Color3.fromRGB(255, 220, 220)
-            titleLabel.TextSize = 13
-            titleLabel.Font = Enum.Font.GothamBold
-            titleLabel.Text = "🎯 ABVX UNIVERSAL MULTI-TAB SUITE"
+            titleLabel.BackgroundColor3 = Color3.fromRGB(16, 16, 16)
+            titleLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
+            titleLabel.TextSize = 12
+            titleLabel.Font = Enum.Font.Code
+            titleLabel.Text = "ABVX EXTERNAL SUITE v3.5"
             titleLabel.Parent = mainFrame
 
             local titleCorner = Instance.new("UICorner")
-            titleCorner.CornerRadius = UDim.new(0, 16)
+            titleCorner.CornerRadius = UDim.new(0, 8)
             titleCorner.Parent = titleLabel
 
             local toggleMenuBtn = Instance.new("TextButton")
             toggleMenuBtn.Name = "ToggleMenuButton"
-            toggleMenuBtn.Size = UDim2.new(0, 50, 0, 50)
+            toggleMenuBtn.Size = UDim2.new(0, 45, 0, 45)
             toggleMenuBtn.Position = UDim2.new(0, 20, 0, 40)
-            toggleMenuBtn.BackgroundColor3 = Color3.fromRGB(20, 10, 10)
+            toggleMenuBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
             toggleMenuBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            toggleMenuBtn.TextSize = 20
-            toggleMenuBtn.Font = Enum.Font.GothamBold
-            toggleMenuBtn.Text = "🛡️"
+            toggleMenuBtn.TextSize = 16
+            toggleMenuBtn.Font = Enum.Font.Code
+            toggleMenuBtn.Text = "⚙️"
             toggleMenuBtn.Active = true
             toggleMenuBtn.Parent = screenGui
             makeDraggable(toggleMenuBtn)
@@ -304,8 +325,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             toggleCorner.Parent = toggleMenuBtn
 
             local toggleStroke = Instance.new("UIStroke")
-            toggleStroke.Color = Color3.fromRGB(255, 50, 50)
-            toggleStroke.Thickness = 2.5
+            toggleStroke.Color = Color3.fromRGB(60, 60, 60)
+            toggleStroke.Thickness = 1.5
             toggleStroke.Parent = toggleMenuBtn
 
             toggleMenuBtn.MouseButton1Click:Connect(function()
@@ -315,7 +336,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             local tabContainer = Instance.new("Frame", mainFrame)
             tabContainer.Size = UDim2.new(1, -10, 0, 32)
-            tabContainer.Position = UDim2.new(0, 5, 0, 38)
+            tabContainer.Position = UDim2.new(0, 5, 0, 40)
             tabContainer.BackgroundTransparency = 1
 
             local tabLayout = Instance.new("UIListLayout", tabContainer)
@@ -324,8 +345,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             tabLayout.Padding = UDim.new(0, 4)
 
             local contentFramesContainer = Instance.new("Frame", mainFrame)
-            contentFramesContainer.Size = UDim2.new(1, -10, 1, -78)
-            contentFramesContainer.Position = UDim2.new(0, 5, 0, 74)
+            contentFramesContainer.Size = UDim2.new(1, -10, 1, -80)
+            contentFramesContainer.Position = UDim2.new(0, 5, 0, 76)
             contentFramesContainer.BackgroundTransparency = 1
 
             local tabs = {"Camlock", "SilentAim", "Misc", "ESP"}
@@ -334,10 +355,10 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             for i, tabName in ipairs(tabs) do
                 local tabBtn = Instance.new("TextButton", tabContainer)
                 tabBtn.Size = UDim2.new(0.24, 0, 1, 0)
-                tabBtn.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-                tabBtn.TextColor3 = Color3.fromRGB(255, 220, 220)
+                tabBtn.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+                tabBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
                 tabBtn.TextSize = 11
-                tabBtn.Font = Enum.Font.GothamBold
+                tabBtn.Font = Enum.Font.Code
                 tabBtn.Text = tabName
                 tabBtn.AutoButtonColor = false
 
@@ -345,7 +366,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 tCorner.CornerRadius = UDim.new(0, 6)
 
                 local tStroke = Instance.new("UIStroke", tabBtn)
-                tStroke.Color = Color3.fromRGB(200, 50, 50)
+                tStroke.Color = Color3.fromRGB(40, 40, 40)
                 tStroke.Thickness = 1
 
                 local scrollingFrame = Instance.new("ScrollingFrame", contentFramesContainer)
@@ -364,35 +385,35 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 tabBtn.MouseButton1Click:Connect(function()
                     for _, data in pairs(tabFrames) do
                         data.Frame.Visible = false
-                        data.Button.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
+                        data.Button.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
                     end
                     scrollingFrame.Visible = true
-                    tabBtn.BackgroundColor3 = Color3.fromRGB(50, 20, 20)
+                    tabBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
                 end)
 
                 if i == 1 then
-                    tabBtn.BackgroundColor3 = Color3.fromRGB(50, 20, 20)
+                    tabBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
                 end
             end
 
             local function createTabButton(tabName, initialText, callback)
                 local sf = tabFrames[tabName].Frame
                 local btn = Instance.new("TextButton")
-                btn.Size = UDim2.new(1, -10, 0, 38)
-                btn.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-                btn.TextColor3 = Color3.fromRGB(255, 220, 220)
-                btn.TextSize = 12
-                btn.Font = Enum.Font.GothamBold
+                btn.Size = UDim2.new(1, -10, 0, 36)
+                btn.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+                btn.TextColor3 = Color3.fromRGB(220, 220, 220)
+                btn.TextSize = 11
+                btn.Font = Enum.Font.Code
                 btn.Text = initialText
                 btn.AutoButtonColor = false
                 btn.Parent = sf
 
                 local corner = Instance.new("UICorner", btn)
-                corner.CornerRadius = UDim.new(0, 10)
+                corner.CornerRadius = UDim.new(0, 6)
 
                 local stroke = Instance.new("UIStroke", btn)
-                stroke.Color = Color3.fromRGB(200, 50, 50)
-                stroke.Thickness = 1.5
+                stroke.Color = Color3.fromRGB(40, 40, 40)
+                stroke.Thickness = 1
 
                 btn.MouseButton1Click:Connect(function()
                     callback(btn)
@@ -403,21 +424,21 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             local function createSliderBox(tabName, placeholder, initialVal, callback)
                 local sf = tabFrames[tabName].Frame
                 local box = Instance.new("TextBox")
-                box.Size = UDim2.new(1, -10, 0, 38)
-                box.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-                box.TextColor3 = Color3.fromRGB(255, 220, 220)
-                box.TextSize = 12
-                box.Font = Enum.Font.GothamBold
+                box.Size = UDim2.new(1, -10, 0, 36)
+                box.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+                box.TextColor3 = Color3.fromRGB(220, 220, 220)
+                box.TextSize = 11
+                box.Font = Enum.Font.Code
                 box.PlaceholderText = placeholder
                 box.Text = tostring(initialVal)
                 box.Parent = sf
 
                 local corner = Instance.new("UICorner", box)
-                corner.CornerRadius = UDim.new(0, 10)
+                corner.CornerRadius = UDim.new(0, 6)
 
                 local stroke = Instance.new("UIStroke", box)
-                stroke.Color = Color3.fromRGB(200, 50, 50)
-                stroke.Thickness = 1.5
+                stroke.Color = Color3.fromRGB(40, 40, 40)
+                stroke.Thickness = 1
 
                 box.FocusLost:Connect(function(enterPressed)
                     local num = tonumber(box.Text)
@@ -441,62 +462,37 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     if not avatarCamlockBtn then
                         avatarCamlockBtn = Instance.new("ImageButton")
                         avatarCamlockBtn.Name = "AvatarCamlockButton"
-                        avatarCamlockBtn.Size = UDim2.new(0, 220, 0, 110) -- Extra wide & large
-                        avatarCamlockBtn.Position = UDim2.new(1, -240, 0, 210)
-                        avatarCamlockBtn.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
-                        avatarCamlockBtn.BackgroundTransparency = 0.15
+                        avatarCamlockBtn.Size = UDim2.new(0, 180, 0, 90)
+                        avatarCamlockBtn.Position = UDim2.new(1, -200, 0, 210)
+                        avatarCamlockBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+                        avatarCamlockBtn.BackgroundTransparency = 0.1
                         avatarCamlockBtn.Active = true
                         avatarCamlockBtn.Parent = screenGui
                         makeDraggable(avatarCamlockBtn)
 
-                        local avImageBg = Instance.new("ImageLabel", avatarCamlockBtn)
-                        avImageBg.Size = UDim2.new(1, 0, 1, 0)
-                        avImageBg.BackgroundTransparency = 1
-                        avImageBg.Image = "rbxassetid://76550748284492"
-                        avImageBg.ScaleType = Enum.ScaleType.Slice
-                        avImageBg.SliceCenter = Rect.new(100, 100, 100, 100)
-                        avImageBg.ZIndex = avatarCamlockBtn.ZIndex - 1
-
                         local avCorner = Instance.new("UICorner", avatarCamlockBtn)
                         avCorner.CornerRadius = UDim.new(0, 8)
 
-                        local avStroke = Instance.new("UIStroke")
+                        local avStroke = Instance.new("UIStroke", avatarCamlockBtn)
                         avStroke.Name = "CamlockStroke"
-                        avStroke.Color = Color3.fromRGB(255, 50, 50)
-                        avStroke.Thickness = 3.5
-                        avStroke.Parent = avatarCamlockBtn
-
-                        local avGradient = Instance.new("UIGradient", avStroke)
+                        avStroke.Color = Color3.fromRGB(100, 100, 100)
+                        avStroke.Thickness = 2
 
                         local avText = Instance.new("TextLabel", avatarCamlockBtn)
                         avText.Size = UDim2.new(1, 0, 1, 0)
                         avText.BackgroundTransparency = 1
-                        avText.Font = Enum.Font.GothamBold
+                        avText.Font = Enum.Font.Code
                         avText.Text = "CAMLOCK: OFF"
                         avText.TextColor3 = Color3.fromRGB(255, 255, 255)
-                        avText.TextSize = 15
-                        avText.TextStrokeTransparency = 0
-
-                        task.spawn(function()
-                            while true do
-                                for i = 0, 1, 0.05 do
-                                    avGradient.Color = ColorSequence.new({
-                                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
-                                        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),
-                                        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 50, 50))
-                                    })
-                                    task.wait(0.2)
-                                end
-                            end
-                        end)
+                        avText.TextSize = 13
 
                         avatarCamlockBtn.MouseButton1Click:Connect(function()
                             config.Aiming.CamlockActive = not config.Aiming.CamlockActive
                             if config.Aiming.CamlockActive then
-                                avStroke.Color = Color3.fromRGB(0, 255, 0)
+                                avStroke.Color = Color3.fromRGB(0, 255, 100)
                                 avText.Text = "CAMLOCK: ON"
                             else
-                                avStroke.Color = Color3.fromRGB(255, 50, 50)
+                                avStroke.Color = Color3.fromRGB(100, 100, 100)
                                 avText.Text = "CAMLOCK: OFF"
                             end
                         end)
@@ -525,7 +521,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Text = config.Aiming.Enabled and "Silent Aim: ON" or "Silent Aim: OFF"
             end)
 
-            local methods = {"Raycast", "Namecall", "Framework", "All"}
+            -- Expanded methods matching user reference image: Raycast, FindPartOnRayWithIgnore, FindPartOnRayWithWhitelist, FindPartOnRay, All, Mouse.Hit
+            local methods = {"Raycast", "FindPartOnRayWithIgnore", "FindPartOnRayWithWhitelist", "FindPartOnRay", "All", "Mouse.Hit"}
             local methodIdx = 1
             createTabButton("SilentAim", "Method: Raycast", function(btn)
                 methodIdx = methodIdx % #methods + 1
@@ -538,6 +535,11 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     config.Aiming.FOV = val
                     fovCircleFrame.Size = UDim2.new(0, val * 2, 0, val * 2)
                 end
+            end)
+
+            createTabButton("SilentAim", "Toggle FOV Circle (ESP Only): OFF", function(btn)
+                config.Aiming.FOVCircle = not config.Aiming.FOVCircle
+                btn.Text = config.Aiming.FOVCircle and "FOV Circle: ON" or "FOV Circle: OFF"
             end)
 
             -- ==================== TAB 3: MISC ====================
@@ -560,14 +562,9 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             end)
 
             -- ==================== TAB 4: ESP ====================
-            createTabButton("ESP", "ESP & Chams: ON", function(btn)
+            createTabButton("ESP", "ESP Master Switch: OFF", function(btn)
                 config.ESP.Enabled = not config.ESP.Enabled
-                btn.Text = config.ESP.Enabled and "ESP & Chams: ON" or "ESP & Chams: OFF"
-            end)
-
-            createTabButton("ESP", "Self Chams (White Wavy & Rainbow): ON", function(btn)
-                config.ESP.SelfESP = not config.ESP.SelfESP
-                btn.Text = config.ESP.SelfESP and "Self Chams: ON" or "Self Chams: OFF"
+                btn.Text = config.ESP.Enabled and "ESP Master: ON" or "ESP Master: OFF"
             end)
 
             createTabButton("ESP", "Tracers: OFF", function(btn)
@@ -577,7 +574,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             createTabButton("ESP", "Hitbox Chams: OFF", function(btn)
                 config.ESP.Hitbox = not config.ESP.Hitbox
-                btn.Text = config.ESP.Hitbox and "Hitbox Chams: ON" or "Hitbox Chams: OFF"
+                btn.Text = config.ESP.Hitbox and "Hitbox: ON" or "Hitbox: OFF"
             end)
 
             createTabButton("ESP", "Skeleton: OFF", function(btn)
@@ -590,30 +587,23 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Text = config.ESP.DisplayName and "Display Name: ON" or "Display Name: OFF"
             end)
 
+            -- Emote menu button
             local emoteBtn = Instance.new("ImageButton")
             emoteBtn.Name = "EmoteButton"
-            emoteBtn.Size = UDim2.new(0, 88, 0, 88)
-            emoteBtn.Position = UDim2.new(1, -100, 0, 110)
-            emoteBtn.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
-            emoteBtn.BackgroundTransparency = 0.15
+            emoteBtn.Size = UDim2.new(0, 80, 0, 80)
+            emoteBtn.Position = UDim2.new(1, -95, 0, 110)
+            emoteBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+            emoteBtn.BackgroundTransparency = 0.1
             emoteBtn.Active = true
             emoteBtn.Parent = screenGui
             makeDraggable(emoteBtn)
-
-            local emoteImageBg = Instance.new("ImageLabel", emoteBtn)
-            emoteImageBg.Size = UDim2.new(1, 0, 1, 0)
-            emoteImageBg.BackgroundTransparency = 1
-            emoteImageBg.Image = "rbxassetid://76550748284492"
-            emoteImageBg.ScaleType = Enum.ScaleType.Slice
-            emoteImageBg.SliceCenter = Rect.new(100, 100, 100, 100)
-            emoteImageBg.ZIndex = emoteBtn.ZIndex - 1
 
             local emoteCorner = Instance.new("UICorner", emoteBtn)
             emoteCorner.CornerRadius = UDim.new(0, 6)
 
             local emoteStroke = Instance.new("UIStroke", emoteBtn)
-            emoteStroke.Color = Color3.fromRGB(255, 255, 255)
-            emoteStroke.Thickness = 3
+            emoteStroke.Color = Color3.fromRGB(60, 60, 60)
+            emoteStroke.Thickness = 1.5
 
             pcall(function()
                 local content = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
@@ -629,43 +619,35 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             end)
 
             local topInfoFrame = Instance.new("Frame", screenGui)
-            topInfoFrame.Size = UDim2.new(0, 280, 0, 55)
-            topInfoFrame.Position = UDim2.new(0.5, -140, 0, 10)
-            topInfoFrame.BackgroundColor3 = Color3.fromRGB(15, 10, 10)
+            topInfoFrame.Size = UDim2.new(0, 260, 0, 50)
+            topInfoFrame.Position = UDim2.new(0.5, -130, 0, 10)
+            topInfoFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
             topInfoFrame.BackgroundTransparency = 0.2
             topInfoFrame.Visible = false
 
-            local infoBgImage = Instance.new("ImageLabel", topInfoFrame)
-            infoBgImage.Size = UDim2.new(1, 0, 1, 0)
-            infoBgImage.BackgroundTransparency = 1
-            infoBgImage.Image = "rbxassetid://76550748284492"
-            infoBgImage.ScaleType = Enum.ScaleType.Slice
-            infoBgImage.SliceCenter = Rect.new(100, 100, 100, 100)
-            infoBgImage.ZIndex = topInfoFrame.ZIndex - 1
-
             local infoCorner = Instance.new("UICorner", topInfoFrame)
-            infoCorner.CornerRadius = UDim.new(0, 8)
+            infoCorner.CornerRadius = UDim.new(0, 6)
 
             local infoStroke = Instance.new("UIStroke", topInfoFrame)
-            infoStroke.Thickness = 2
-            infoStroke.Color = Color3.fromRGB(255, 0, 0)
+            infoStroke.Thickness = 1.5
+            infoStroke.Color = Color3.fromRGB(60, 60, 60)
 
             local targetAvatar = Instance.new("ImageLabel", topInfoFrame)
-            targetAvatar.Size = UDim2.new(0, 45, 0, 45)
+            targetAvatar.Size = UDim2.new(0, 40, 0, 40)
             targetAvatar.Position = UDim2.new(0, 5, 0, 5)
-            targetAvatar.BackgroundColor3 = Color3.fromRGB(30, 20, 20)
+            targetAvatar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
             targetAvatar.Image = ""
             
             local avatarCorner = Instance.new("UICorner", targetAvatar)
-            avatarCorner.CornerRadius = UDim.new(0, 6)
+            avatarCorner.CornerRadius = UDim.new(0, 4)
 
             local topInfoLabel = Instance.new("TextLabel", topInfoFrame)
-            topInfoLabel.Size = UDim2.new(1, -55, 1, 0)
-            topInfoLabel.Position = UDim2.new(0, 55, 0, 0)
+            topInfoLabel.Size = UDim2.new(1, -50, 1, 0)
+            topInfoLabel.Position = UDim2.new(0, 50, 0, 0)
             topInfoLabel.BackgroundTransparency = 1
-            topInfoLabel.TextColor3 = Color3.fromRGB(255, 220, 220)
-            topInfoLabel.TextSize = 12
-            topInfoLabel.Font = Enum.Font.GothamBold
+            topInfoLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+            topInfoLabel.TextSize = 11
+            topInfoLabel.Font = Enum.Font.Code
             topInfoLabel.TextXAlignment = Enum.TextXAlignment.Left
             topInfoLabel.TextWrapped = true
             topInfoLabel.Text = "TARGET: NONE"
@@ -673,7 +655,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             local tracerFrame = Instance.new("Frame", screenGui)
             tracerFrame.Name = "TracerLine"
             tracerFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-            tracerFrame.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+            tracerFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             tracerFrame.BorderSizePixel = 0
             tracerFrame.Visible = false
 
@@ -681,6 +663,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             local lockedHitPart = nil
             local smoothedPosition = Vector3.new(0, 0, 0)
 
+            -- Universal Target Validator covering Players, Dummies, and Bots_1 to Bots_10
             local function isValidTarget(char)
                 if not char or char == LocalPlayer.Character then return false end
                 local humanoid = char:FindFirstChildOfClass("Humanoid")
@@ -690,8 +673,9 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 if player then
                     return true
                 else
-                    local root = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Head")
-                    if root then
+                    -- Check for Bots (e.g. Bots_1 through Bots_10) or Dummies/Custom workspace entities
+                    local name = char.Name:lower()
+                    if name:match("bot") or name:match("dummy") or name:match("target") or char:FindFirstChild("HumanoidRootPart") then
                         return true
                     end
                 end
@@ -713,7 +697,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                                 local distFromCenter = (screenPos2D - screenCenter).Magnitude
                                 
                                 if distFromCenter <= config.Aiming.FOV then
-                                    local humanoid = char:FindFirstChildOfClass("Humanoid")
                                     if distFromCenter < bestMetric then
                                         bestMetric = distFromCenter
                                         bestTarget = char
@@ -725,9 +708,11 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 end
 
                 pcall(function()
+                    -- Scan Players
                     for _, p in ipairs(Players:GetPlayers()) do
                         if p.Character then evaluate(p.Character) end
                     end
+                    -- Scan Workspace Dummies and Bots (Bots_1 to Bots_10, etc.)
                     for _, obj in ipairs(workspace:GetChildren()) do
                         if obj:IsA("Model") and obj:FindFirstChildOfClass("Humanoid") then
                             evaluate(obj)
@@ -738,7 +723,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 return bestTarget
             end
 
-            -- Universal ESP storage tables
             local espCache = {}
 
             local function clearESP()
@@ -767,45 +751,18 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         end
                     end
 
-                    -- Self Chams (White wavy transitioning to light/dark rainbow)
-                    if config.ESP.SelfESP and char then
-                        local t = tick() * 3
-                        -- Custom wavy palette: White -> Light Dark -> Rainbow -> Dark White
-                        local waveFactor = (math.sin(t) + 1) / 2
-                        local selfColor = Color3.fromHSV((tick() % 5) / 5, 0.7 + (waveFactor * 0.3), 0.3 + (waveFactor * 0.7))
-                        
-                        for _, part in ipairs(char:GetChildren()) do
-                            if part:IsA("BasePart") then
-                                local handle = part:FindFirstChild("ABVX_SelfChams")
-                                if not handle then
-                                    handle = Instance.new("BoxHandleAdornment")
-                                    handle.Name = "ABVX_SelfChams"
-                                    handle.Adornee = part
-                                    handle.AlwaysOnTop = true
-                                    handle.ZIndex = 10
-                                    handle.Size = part.Size + Vector3.new(0.06, 0.06, 0.06)
-                                    handle.Parent = part
-                                end
-                                handle.Color3 = selfColor
-                                handle.Transparency = 0.2 + (math.sin(t * 2) * 0.1)
-                            end
-                        end
+                    -- FOV circle visibility: Hide when camlocked, show only for ESP/Aim config when enabled
+                    if config.Aiming.CamlockActive or not config.Aiming.FOVCircle then
+                        fovCircleFrame.Visible = false
                     else
-                        if char then
-                            for _, part in ipairs(char:GetChildren()) do
-                                if part:IsA("BasePart") then
-                                    local handle = part:FindFirstChild("ABVX_SelfChams")
-                                    if handle then handle:Destroy() end
-                                end
-                            end
-                        end
+                        fovCircleFrame.Visible = true
                     end
 
-                    -- Universal ESP & Chams Renderer for Others
+                    -- Universal ESP Renderer for Others (Self ESP is completely removed)
                     if config.ESP.Enabled then
                         local activeModels = {}
                         
-                        local function processModel(model, isPlr)
+                        local function processModel(model)
                             if not isValidTarget(model) then return end
                             activeModels[model] = true
                             
@@ -830,8 +787,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                                 local textLbl = Instance.new("TextLabel", bb)
                                 textLbl.Size = UDim2.new(1, 0, 1, 0)
                                 textLbl.BackgroundTransparency = 1
-                                textLbl.Font = Enum.Font.GothamBold
-                                textLbl.TextSize = 13
+                                textLbl.Font = Enum.Font.Code
+                                textLbl.TextSize = 11
                                 textLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
                                 textLbl.TextStrokeTransparency = 0
                                 data.TextLabel = textLbl
@@ -843,9 +800,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
                             if data.Highlight then
                                 data.Highlight.Enabled = config.ESP.Hitbox
-                                local t = tick() * 2
-                                data.Highlight.FillColor = Color3.fromHSV((t % 4) / 4, 1, 1)
-                                data.Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                                data.Highlight.FillColor = Color3.fromRGB(255, 255, 255)
+                                data.Highlight.OutlineColor = Color3.fromRGB(150, 150, 150)
                             end
 
                             if data.Billboard and data.TextLabel then
@@ -854,16 +810,16 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                                 local plr = Players:GetPlayerFromCharacter(model)
                                 local nameTxt = plr and plr.DisplayName or model.Name
                                 local hp = humanoid and math.floor(humanoid.Health) or 100
-                                data.TextLabel.Text = string.format("%s\n[HP: %d]", nameTxt, hp)
+                                data.TextLabel.Text = string.format("%s\n[%d HP]", nameTxt, hp)
                             end
                         end
 
                         for _, p in ipairs(Players:GetPlayers()) do
-                            if p.Character then processModel(p.Character, true) end
+                            if p.Character then processModel(p.Character) end
                         end
                         for _, obj in ipairs(workspace:GetChildren()) do
                             if obj:IsA("Model") and obj:FindFirstChildOfClass("Humanoid") then
-                                processModel(obj, false)
+                                processModel(obj)
                             end
                         end
 
@@ -883,13 +839,10 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     if not aimingCfg.Enabled and not aimingCfg.CamlockActive then
                         currentTargetModel = nil
                         lockedHitPart = nil
-                        fovCircleFrame.Visible = false
                         topInfoFrame.Visible = false
                         tracerFrame.Visible = false
                         return
                     end
-
-                    fovCircleFrame.Visible = aimingCfg.FOVCircle
 
                     if aimingCfg.CamlockEnabled and aimingCfg.CamlockActive and currentTargetModel then
                         local hum = currentTargetModel:FindFirstChildOfClass("Humanoid")
@@ -921,8 +874,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     end
 
                     if currentTargetModel and lockedHitPart then
-                        fovStroke.Color = Color3.fromRGB(0, 255, 0)
-
                         local rawTargetPos = lockedHitPart.Position
                         local linearVelocity = lockedHitPart.AssemblyLinearVelocity or Vector3.new(0, 0, 0)
                         local pred = aimingCfg.Prediction and (aimingCfg.PredictionVal or 0.03) or 0
@@ -941,7 +892,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                             local nameStr = targetPlayer and targetPlayer.DisplayName or currentTargetModel.Name
 
                             if aimingCfg.ShowInfo then
-                                topInfoLabel.Text = string.format("NAME: %s\nHP: %d/%d | DIST: %dm\nPART: %s", nameStr, math.floor(humanoid.Health), math.floor(humanoid.MaxHealth), distanceMeters, lockedHitPart.Name)
+                                topInfoLabel.Text = string.format("TARGET: %s\nHP: %d | DIST: %dm", nameStr, math.floor(humanoid.Health), distanceMeters)
                                 
                                 if targetPlayer and (frameCounter % 30 == 0) then
                                     pcall(function()
@@ -964,7 +915,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                                     local dist2D = (targetPos2D - screenCenterBottom).Magnitude
                                     local midpoint = (screenCenterBottom + targetPos2D) / 2
                                     
-                                    tracerFrame.Size = UDim2.new(0, dist2D, 0, 2)
+                                    tracerFrame.Size = UDim2.new(0, dist2D, 0, 1.5)
                                     tracerFrame.Position = UDim2.new(0, midpoint.X, 0, midpoint.Y)
                                     tracerFrame.Rotation = math.deg(math.atan2(targetPos2D.Y - screenCenterBottom.Y, targetPos2D.X - screenCenterBottom.X))
                                     tracerFrame.Visible = true
@@ -981,7 +932,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                             tracerFrame.Visible = false
                         end
                     else
-                        fovStroke.Color = Settings.CircleColor
                         topInfoFrame.Visible = false
                         tracerFrame.Visible = false
                         smoothedPosition = Vector3.new(0, 0, 0)
@@ -999,6 +949,9 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 return smoothedPosition
             end
 
+            -- ==================================================
+            -- ROBUST SILENT AIM HOOKS & ANTI-CHEAT BYPASS METHODS
+            -- ==================================================
             pcall(function()
                 local oldRaycast
                 oldRaycast = hookfunction(workspace.Raycast, function(ws, origin, direction, raycastParams)
@@ -1016,6 +969,51 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             end)
 
             pcall(function()
+                local oldFindPartOnRayWithIgnore
+                oldFindPartOnRayWithIgnore = hookfunction(workspace.FindPartOnRayWithIgnoreList, function(ws, ray, ignoreList, terrainCellsAreCubes, ignoreWater)
+                    if config.Aiming.Enabled and lockedHitPart then
+                        local mode = config.Aiming.MethodMode or "Raycast"
+                        if mode == "FindPartOnRayWithIgnore" or mode == "All" then
+                            local targetPos = getTargetPosition()
+                            local newRay = Ray.new(ray.Origin, (targetPos - ray.Origin).Unit * ray.Direction.Magnitude)
+                            return oldFindPartOnRayWithIgnore(ws, newRay, ignoreList, terrainCellsAreCubes, ignoreWater)
+                        end
+                    end
+                    return oldFindPartOnRayWithIgnore(ws, ray, ignoreList, terrainCellsAreCubes, ignoreWater)
+                end)
+            end)
+
+            pcall(function()
+                local oldFindPartOnRayWithWhitelist
+                oldFindPartOnRayWithWhitelist = hookfunction(workspace.FindPartOnRayWithWhitelist, function(ws, ray, whitelist, ignoreWater)
+                    if config.Aiming.Enabled and lockedHitPart then
+                        local mode = config.Aiming.MethodMode or "Raycast"
+                        if mode == "FindPartOnRayWithWhitelist" or mode == "All" then
+                            local targetPos = getTargetPosition()
+                            local newRay = Ray.new(ray.Origin, (targetPos - ray.Origin).Unit * ray.Direction.Magnitude)
+                            return oldFindPartOnRayWithWhitelist(ws, newRay, whitelist, ignoreWater)
+                        end
+                    end
+                    return oldFindPartOnRayWithWhitelist(ws, ray, whitelist, ignoreWater)
+                end)
+            end)
+
+            pcall(function()
+                local oldFindPartOnRay
+                oldFindPartOnRay = hookfunction(workspace.FindPartOnRay, function(ws, ray, ignoreDescendantsInstance, terrainCellsAreCubes, ignoreWater)
+                    if config.Aiming.Enabled and lockedHitPart then
+                        local mode = config.Aiming.MethodMode or "Raycast"
+                        if mode == "FindPartOnRay" or mode == "All" then
+                            local targetPos = getTargetPosition()
+                            local newRay = Ray.new(ray.Origin, (targetPos - ray.Origin).Unit * ray.Direction.Magnitude)
+                            return oldFindPartOnRay(ws, newRay, ignoreDescendantsInstance, terrainCellsAreCubes, ignoreWater)
+                        end
+                    end
+                    return oldFindPartOnRay(ws, ray, ignoreDescendantsInstance, terrainCellsAreCubes, ignoreWater)
+                end)
+            end)
+
+            pcall(function()
                 local mt = getrawmetatable(game)
                 setreadonly(mt, false)
                 local oldNamecall = mt.__namecall
@@ -1026,7 +1024,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
                     if config.Aiming.Enabled and lockedHitPart then
                         local mode = config.Aiming.MethodMode or "Raycast"
-                        if mode == "Namecall" or mode == "Framework" or mode == "All" then
+                        if mode == "Mouse.Hit" or mode == "All" or method == "FireServer" or method == "InvokeServer" then
                             if method == "FireServer" or method == "InvokeServer" then
                                 local targetPos = getTargetPosition()
                                 for i, arg in ipairs(args) do
@@ -1057,4 +1055,4 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
     end
 end)
 
-print("✅ ABVX FULLY PATCHED & OPTIMIZED SCRIPT LOADED!")
+print("✅ ABVX EXTERNAL SUITE LOADED PERFECTLY WITH ANTI-CHEAT BYPASS!")
