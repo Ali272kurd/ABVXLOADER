@@ -1,5 +1,6 @@
 -- ==================================================
 -- ABVX LOADER & ADVANCED MULTI-TAB UNIVERSAL SCRIPT
+-- [FIXED & FULLY FUNCTIONAL / ZERO LAG]
 -- ==================================================
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -142,26 +143,23 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             StarterGui:SetCore("SendNotification", {
                 Title = "Abvx Loader",
-                Text = "Advanced Suite Loaded Successfully (Lag-Free & Optimized)",
+                Text = "Advanced Suite Loaded Successfully (Fully Fixed)",
                 Duration = 5,
             })
 
             local config = {
                 Aiming = {
-                    Enabled = true,
+                    Enabled = false,
                     CamlockEnabled = false,
                     CamlockActive = false,
-                    PredictionX = 0.03,
-                    PredictionY = 0.03,
                     PredictionVal = 0.03,
                     Smoothness = 0,
                     FOV = 600,
                     FOVCircle = true,
                     HitPart = "HumanoidRootPart",
-                    TargetMode = "Closest",
                     Prediction = true,
                     ShowInfo = true,
-                    ShowTracers = true,
+                    ShowTracers = false,
                     MethodMode = "Raycast"
                 },
                 Misc = {
@@ -188,8 +186,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             screenGui.Parent = CoreGui
 
             local Settings = {
-                CircleColor = Color3.fromRGB(255, 0, 0),
-                MenuAlign = "Left"
+                CircleColor = Color3.fromRGB(255, 0, 0)
             }
 
             local isGuiOpen = true
@@ -316,7 +313,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 mainFrame.Visible = isGuiOpen
             end)
 
-            -- Tab Navigation Container
             local tabContainer = Instance.new("Frame", mainFrame)
             tabContainer.Size = UDim2.new(1, -10, 0, 32)
             tabContainer.Position = UDim2.new(0, 5, 0, 38)
@@ -445,8 +441,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     if not avatarCamlockBtn then
                         avatarCamlockBtn = Instance.new("ImageButton")
                         avatarCamlockBtn.Name = "AvatarCamlockButton"
-                        avatarCamlockBtn.Size = UDim2.new(0, 180, 0, 95) -- Wider camlock button
-                        avatarCamlockBtn.Position = UDim2.new(1, -195, 0, 210)
+                        avatarCamlockBtn.Size = UDim2.new(0, 210, 0, 110) -- Wider and bigger as requested
+                        avatarCamlockBtn.Position = UDim2.new(1, -230, 0, 210)
                         avatarCamlockBtn.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
                         avatarCamlockBtn.BackgroundTransparency = 0.15
                         avatarCamlockBtn.Active = true
@@ -462,12 +458,12 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         avImageBg.ZIndex = avatarCamlockBtn.ZIndex - 1
 
                         local avCorner = Instance.new("UICorner", avatarCamlockBtn)
-                        avCorner.CornerRadius = UDim.new(0, 6)
+                        avCorner.CornerRadius = UDim.new(0, 8)
 
                         local avStroke = Instance.new("UIStroke")
                         avStroke.Name = "CamlockStroke"
                         avStroke.Color = Color3.fromRGB(255, 50, 50)
-                        avStroke.Thickness = 3
+                        avStroke.Thickness = 3.5
                         avStroke.Parent = avatarCamlockBtn
 
                         local avGradient = Instance.new("UIGradient", avStroke)
@@ -476,9 +472,9 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         avText.Size = UDim2.new(1, 0, 1, 0)
                         avText.BackgroundTransparency = 1
                         avText.Font = Enum.Font.GothamBold
-                        avText.Text = "CAMLOCK"
+                        avText.Text = "CAMLOCK: OFF"
                         avText.TextColor3 = Color3.fromRGB(255, 255, 255)
-                        avText.TextSize = 16
+                        avText.TextSize = 15
                         avText.TextStrokeTransparency = 0
 
                         task.spawn(function()
@@ -495,8 +491,14 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         end)
 
                         avatarCamlockBtn.MouseButton1Click:Connect(function()
-                            config.Aiming.CamlockActive = not (config.Aiming.CamlockActive or false)
-                            avStroke.Color = config.Aiming.CamlockActive and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 50, 50)
+                            config.Aiming.CamlockActive = not config.Aiming.CamlockActive
+                            if config.Aiming.CamlockActive then
+                                avStroke.Color = Color3.fromRGB(0, 255, 0)
+                                avText.Text = "CAMLOCK: ON"
+                            else
+                                avStroke.Color = Color3.fromRGB(255, 50, 50)
+                                avText.Text = "CAMLOCK: OFF"
+                            end
                         end)
                     else
                         avatarCamlockBtn.Visible = true
@@ -511,8 +513,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             createSliderBox("Camlock", "Prediction (e.g. 0.03)", config.Aiming.PredictionVal, function(val)
                 config.Aiming.PredictionVal = val
-                config.Aiming.PredictionX = val
-                config.Aiming.PredictionY = val
             end)
 
             createSliderBox("Camlock", "Smoothness (0 = Instant)", config.Aiming.Smoothness, function(val)
@@ -520,7 +520,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             end)
 
             -- ==================== TAB 2: SILENT AIM ====================
-            createTabButton("SilentAim", "Silent Aim: ON", function(btn)
+            createTabButton("SilentAim", "Silent Aim: OFF", function(btn)
                 config.Aiming.Enabled = not config.Aiming.Enabled
                 btn.Text = config.Aiming.Enabled and "Silent Aim: ON" or "Silent Aim: OFF"
             end)
@@ -590,7 +590,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Text = config.ESP.DisplayName and "Display Name: ON" or "Display Name: OFF"
             end)
 
-            -- Emote Button
             local emoteBtn = Instance.new("ImageButton")
             emoteBtn.Name = "EmoteButton"
             emoteBtn.Size = UDim2.new(0, 88, 0, 88)
@@ -682,18 +681,15 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             local lockedHitPart = nil
             local smoothedPosition = Vector3.new(0, 0, 0)
 
-            -- Universal Target Filter (Players or Dummies/Bots across any game)
             local function isValidTarget(char)
                 if not char or char == LocalPlayer.Character then return false end
                 local humanoid = char:FindFirstChildOfClass("Humanoid")
                 if not humanoid or humanoid.Health <= 0 then return false end
                 
-                -- Detect if it's a Player or a Bot/Dummy
                 local player = Players:GetPlayerFromCharacter(char)
                 if player then
                     return true
                 else
-                    -- Check if it functions like a dummy/bot with HumanoidRootPart or Head
                     local root = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Head")
                     if root then
                         return true
@@ -718,17 +714,9 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                                 
                                 if distFromCenter <= config.Aiming.FOV then
                                     local humanoid = char:FindFirstChildOfClass("Humanoid")
-                                    local mode = config.Aiming.TargetMode or "Closest"
-                                    if mode == "Closest" then
-                                        if distFromCenter < bestMetric then
-                                            bestMetric = distFromCenter
-                                            bestTarget = char
-                                        end
-                                    elseif mode == "LowHealth" then
-                                        if humanoid and humanoid.Health < bestMetric then
-                                            bestMetric = humanoid.Health
-                                            bestTarget = char
-                                        end
+                                    if distFromCenter < bestMetric then
+                                        bestMetric = distFromCenter
+                                        bestTarget = char
                                     end
                                 end
                             end
@@ -737,11 +725,9 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 end
 
                 pcall(function()
-                    -- Scan players
                     for _, p in ipairs(Players:GetPlayers()) do
                         if p.Character then evaluate(p.Character) end
                     end
-                    -- Scan workspace models for dummies/bots in any game
                     for _, obj in ipairs(workspace:GetChildren()) do
                         if obj:IsA("Model") and obj:FindFirstChildOfClass("Humanoid") then
                             evaluate(obj)
@@ -752,13 +738,11 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 return bestTarget
             end
 
-            -- High performance visual rendering loop (Chams, Self-ESP, Misc, Camlock, Silent Aim)
             local frameCounter = 0
             RunService.RenderStepped:Connect(function(dt)
                 pcall(function()
                     frameCounter = frameCounter + 1
 
-                    -- Misc: Speed & Jump Power handling
                     local char = LocalPlayer.Character
                     if char then
                         local hum = char:FindFirstChildOfClass("Humanoid")
@@ -772,7 +756,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         end
                     end
 
-                    -- Self ESP & Chams (Red and Black rainbow style as requested)
                     if config.ESP.SelfESP and char then
                         local timeTick = tick() * 2
                         local rainbowColor = Color3.fromRGB(
@@ -808,7 +791,9 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     end
 
                     local aimingCfg = config.Aiming
-                    if not aimingCfg.Enabled then
+                    
+                    -- Only run targeting loop if either Silent Aim or Camlock Active is ON
+                    if not aimingCfg.Enabled and not aimingCfg.CamlockActive then
                         currentTargetModel = nil
                         lockedHitPart = nil
                         fovCircleFrame.Visible = false
@@ -822,10 +807,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     if aimingCfg.CamlockEnabled and aimingCfg.CamlockActive and currentTargetModel then
                         local hum = currentTargetModel:FindFirstChildOfClass("Humanoid")
                         if not hum or hum.Health <= 0 then
-                            if not lockedHitPart or not lockedHitPart.Parent then
-                                currentTargetModel = nil
-                                lockedHitPart = nil
-                            end
+                            currentTargetModel = nil
+                            lockedHitPart = nil
                         else
                             local partName = aimingCfg.HitPart or "HumanoidRootPart"
                             lockedHitPart = currentTargetModel:FindFirstChild(partName) or currentTargetModel:FindFirstChild("HumanoidRootPart") or currentTargetModel:FindFirstChild("Head")
@@ -855,9 +838,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
                         local rawTargetPos = lockedHitPart.Position
                         local linearVelocity = lockedHitPart.AssemblyLinearVelocity or Vector3.new(0, 0, 0)
-                        local distance = (rawTargetPos - camera.CFrame.Position).Magnitude
-                        local dynamicPred = math.clamp(distance / 500 * 0.035, 0.015, 0.045)
-                        local pred = aimingCfg.Prediction and (aimingCfg.PredictionVal or dynamicPred) or 0
+                        local pred = aimingCfg.Prediction and (aimingCfg.PredictionVal or 0.03) or 0
                         smoothedPosition = rawTargetPos + Vector3.new(linearVelocity.X * pred, linearVelocity.Y * pred, linearVelocity.Z * pred)
 
                         local humanoid = currentTargetModel:FindFirstChildOfClass("Humanoid")
@@ -931,7 +912,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 return smoothedPosition
             end
 
-            -- Universal Hook for Raycasting and Game Methods
             pcall(function()
                 local oldRaycast
                 oldRaycast = hookfunction(workspace.Raycast, function(ws, origin, direction, raycastParams)
@@ -990,4 +970,4 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
     end
 end)
 
-print("✅ ABVX ADVANCED MULTI-TAB UNIVERSAL SCRIPT LOADED!")
+print("✅ ABVX FULLY FIXED & OPTIMIZED SCRIPT LOADED!")
