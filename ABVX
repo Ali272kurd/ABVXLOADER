@@ -1,5 +1,5 @@
 -- ==================================================
--- ABVX LOADER & UNIVERSAL ADVANCED MULTI-METHOD AIM, ESP & MISC [OPTIMIZED & LAG-FREE]
+-- ABVX LOADER & ADVANCED MULTI-TAB UNIVERSAL SCRIPT
 -- ==================================================
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -16,14 +16,10 @@ end
 
 local camera = workspace.CurrentCamera
 
-if CoreGui:FindFirstChild("AliiwydddUltimateSilentAim") then
-    CoreGui.AliiwydddUltimateSilentAim:Destroy()
-end
-if CoreGui:FindFirstChild("AliiwydddEmoteHub") then
-    CoreGui.AliiwydddEmoteHub:Destroy()
-end
-if CoreGui:FindFirstChild("KeyUI") then
-    CoreGui.KeyUI:Destroy()
+for _, name in ipairs({"AliiwydddUltimateSilentAim", "AliiwydddEmoteHub", "KeyUI", "ABVX_MainGui"}) do
+    if CoreGui:FindFirstChild(name) then
+        CoreGui[name]:Destroy()
+    end
 end
 
 local keyScreenGui = Instance.new("ScreenGui")
@@ -146,43 +142,47 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             StarterGui:SetCore("SendNotification", {
                 Title = "Abvx Loader",
-                Text = "Full Universal Hub Enabled (Lag-Free & Optimized)",
+                Text = "Advanced Suite Loaded Successfully (Lag-Free & Optimized)",
                 Duration = 5,
             })
 
-            local v79 = {
+            local config = {
                 Aiming = {
-                    Enabled = false,
+                    Enabled = true,
                     CamlockEnabled = false,
                     CamlockActive = false,
-                    Prediction = 0.03,
-                    Smoothness = 0.1,
+                    PredictionX = 0.03,
+                    PredictionY = 0.03,
+                    PredictionVal = 0.03,
+                    Smoothness = 0,
                     FOV = 600,
                     FOVCircle = true,
                     HitPart = "HumanoidRootPart",
                     TargetMode = "Closest",
-                    MethodMode = "Raycast",
-                    TargetType = "Both" -- Players or Bots or Both
-                },
-                ESP = {
-                    Enabled = false,
-                    Tracers = false,
-                    Hitbox = false,
-                    Skeleton = false,
-                    DisplayName = false,
-                    SelfESP = true
+                    Prediction = true,
+                    ShowInfo = true,
+                    ShowTracers = true,
+                    MethodMode = "Raycast"
                 },
                 Misc = {
                     SpeedEnabled = false,
                     SpeedValue = 16,
                     JumpEnabled = false,
                     JumpValue = 50
+                },
+                ESP = {
+                    Enabled = true,
+                    SelfESP = true,
+                    Tracers = false,
+                    Hitbox = false,
+                    Skeleton = false,
+                    DisplayName = false
                 }
             }
-            getgenv().CrackThis = v79
+            getgenv().CrackThis = config
 
             local screenGui = Instance.new("ScreenGui")
-            screenGui.Name = "AliiwydddUltimateSilentAim"
+            screenGui.Name = "ABVX_MainGui"
             screenGui.ResetOnSpawn = false
             screenGui.IgnoreGuiInset = true
             screenGui.Parent = CoreGui
@@ -229,7 +229,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             fovCircleFrame.Name = "FOVCircle"
             fovCircleFrame.AnchorPoint = Vector2.new(0.5, 0.5)
             fovCircleFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-            fovCircleFrame.Size = UDim2.new(0, getgenv().CrackThis.Aiming.FOV * 2, 0, getgenv().CrackThis.Aiming.FOV * 2)
+            fovCircleFrame.Size = UDim2.new(0, config.Aiming.FOV * 2, 0, config.Aiming.FOV * 2)
             fovCircleFrame.BackgroundTransparency = 1
             fovCircleFrame.Visible = false
             fovCircleFrame.Parent = screenGui
@@ -245,7 +245,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             local mainFrame = Instance.new("Frame")
             mainFrame.Name = "MainFrame"
-            mainFrame.Size = UDim2.new(0, 310, 0, 480)
+            mainFrame.Size = UDim2.new(0, 320, 0, 480)
             mainFrame.Position = UDim2.new(0, 40, 0, 100)
             mainFrame.BackgroundColor3 = Color3.fromRGB(15, 10, 10)
             mainFrame.BackgroundTransparency = 0.05
@@ -277,12 +277,12 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             end)
 
             local titleLabel = Instance.new("TextLabel")
-            titleLabel.Size = UDim2.new(1, 0, 0, 40)
+            titleLabel.Size = UDim2.new(1, 0, 0, 35)
             titleLabel.BackgroundColor3 = Color3.fromRGB(20, 10, 10)
             titleLabel.TextColor3 = Color3.fromRGB(255, 220, 220)
             titleLabel.TextSize = 13
             titleLabel.Font = Enum.Font.GothamBold
-            titleLabel.Text = "🎯 ABVX UNIVERSAL HUB"
+            titleLabel.Text = "🎯 ABVX UNIVERSAL MULTI-TAB SUITE"
             titleLabel.Parent = mainFrame
 
             local titleCorner = Instance.new("UICorner")
@@ -316,82 +316,71 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 mainFrame.Visible = isGuiOpen
             end)
 
-            -- Tab System Bar
+            -- Tab Navigation Container
             local tabContainer = Instance.new("Frame", mainFrame)
-            tabContainer.Size = UDim2.new(1, -10, 0, 35)
-            tabContainer.Position = UDim2.new(0, 5, 0, 45)
+            tabContainer.Size = UDim2.new(1, -10, 0, 32)
+            tabContainer.Position = UDim2.new(0, 5, 0, 38)
             tabContainer.BackgroundTransparency = 1
 
             local tabLayout = Instance.new("UIListLayout", tabContainer)
             tabLayout.FillDirection = Enum.FillDirection.Horizontal
-            tabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
             tabLayout.Padding = UDim.new(0, 4)
 
-            local contentContainer = Instance.new("Frame", mainFrame)
-            contentContainer.Size = UDim2.new(1, -10, 1, -90)
-            contentContainer.Position = UDim2.new(0, 5, 0, 85)
-            contentContainer.BackgroundTransparency = 1
+            local contentFramesContainer = Instance.new("Frame", mainFrame)
+            contentFramesContainer.Size = UDim2.new(1, -10, 1, -78)
+            contentFramesContainer.Position = UDim2.new(0, 5, 0, 74)
+            contentFramesContainer.BackgroundTransparency = 1
 
-            local tabs = {}
-            local function createTabContent(name)
-                local scrollingFrame = Instance.new("ScrollingFrame")
+            local tabs = {"Camlock", "SilentAim", "Misc", "ESP"}
+            local tabFrames = {}
+
+            for i, tabName in ipairs(tabs) do
+                local tabBtn = Instance.new("TextButton", tabContainer)
+                tabBtn.Size = UDim2.new(0.24, 0, 1, 0)
+                tabBtn.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
+                tabBtn.TextColor3 = Color3.fromRGB(255, 220, 220)
+                tabBtn.TextSize = 11
+                tabBtn.Font = Enum.Font.GothamBold
+                tabBtn.Text = tabName
+                tabBtn.AutoButtonColor = false
+
+                local tCorner = Instance.new("UICorner", tabBtn)
+                tCorner.CornerRadius = UDim.new(0, 6)
+
+                local tStroke = Instance.new("UIStroke", tabBtn)
+                tStroke.Color = Color3.fromRGB(200, 50, 50)
+                tStroke.Thickness = 1
+
+                local scrollingFrame = Instance.new("ScrollingFrame", contentFramesContainer)
                 scrollingFrame.Size = UDim2.new(1, 0, 1, 0)
                 scrollingFrame.BackgroundTransparency = 1
-                scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 550)
+                scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 520)
                 scrollingFrame.ScrollBarThickness = 3
-                scrollingFrame.Visible = false
-                scrollingFrame.Parent = contentContainer
+                scrollingFrame.Visible = (i == 1)
 
-                local uiLayout = Instance.new("UIListLayout")
-                uiLayout.Padding = UDim.new(0, 7)
-                uiLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-                uiLayout.Parent = scrollingFrame
+                local sLayout = Instance.new("UIListLayout", scrollingFrame)
+                sLayout.Padding = UDim.new(0, 7)
+                sLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-                tabs[name] = scrollingFrame
-                return scrollingFrame
-            end
+                tabFrames[tabName] = {Button = tabBtn, Frame = scrollingFrame}
 
-            local tabCamlock = createTabContent("Camlock")
-            local tabSilent = createTabContent("SilentAim")
-            local tabMisc = createTabContent("Misc")
-            local tabEsp = createTabContent("ESP")
+                tabBtn.MouseButton1Click:Connect(function()
+                    for _, data in pairs(tabFrames) do
+                        data.Frame.Visible = false
+                        data.Button.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
+                    end
+                    scrollingFrame.Visible = true
+                    tabBtn.BackgroundColor3 = Color3.fromRGB(50, 20, 20)
+                end)
 
-            local function switchTab(tabName)
-                for name, frame in pairs(tabs) do
-                    frame.Visible = (name == tabName)
+                if i == 1 then
+                    tabBtn.BackgroundColor3 = Color3.fromRGB(50, 20, 20)
                 end
             end
 
-            local function createTabButton(title, targetTab)
-                local btn = Instance.new("TextButton", tabContainer)
-                btn.Size = UDim2.new(0.23, 0, 1, 0)
-                btn.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-                btn.TextColor3 = Color3.fromRGB(255, 220, 220)
-                btn.TextSize = 11
-                btn.Font = Enum.Font.GothamBold
-                btn.Text = title
-                btn.AutoButtonColor = false
-
-                local corner = Instance.new("UICorner", btn)
-                corner.CornerRadius = UDim.new(0, 8)
-                local stroke = Instance.new("UIStroke", btn)
-                stroke.Color = Color3.fromRGB(200, 50, 50)
-                stroke.Thickness = 1.2
-
-                btn.MouseButton1Click:Connect(function()
-                    switchTab(targetTab)
-                end)
-                return btn
-            end
-
-            createTabButton("Camlock", "Camlock")
-            createTabButton("Silent", "SilentAim")
-            createTabButton("Misc", "Misc")
-            createTabButton("ESP", "ESP")
-
-            switchTab("Camlock")
-
-            local function createButton(parentFrame, initialText, callback)
+            local function createTabButton(tabName, initialText, callback)
+                local sf = tabFrames[tabName].Frame
                 local btn = Instance.new("TextButton")
                 btn.Size = UDim2.new(1, -10, 0, 38)
                 btn.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
@@ -400,16 +389,14 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Font = Enum.Font.GothamBold
                 btn.Text = initialText
                 btn.AutoButtonColor = false
-                btn.Parent = parentFrame
+                btn.Parent = sf
 
-                local corner = Instance.new("UICorner")
+                local corner = Instance.new("UICorner", btn)
                 corner.CornerRadius = UDim.new(0, 10)
-                corner.Parent = btn
 
-                local stroke = Instance.new("UIStroke")
+                local stroke = Instance.new("UIStroke", btn)
                 stroke.Color = Color3.fromRGB(200, 50, 50)
                 stroke.Thickness = 1.5
-                stroke.Parent = btn
 
                 btn.MouseButton1Click:Connect(function()
                     callback(btn)
@@ -417,19 +404,48 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 return btn
             end
 
-            -- ==========================================
-            -- TAB 1: CAMLOCK
-            -- ==========================================
+            local function createSliderBox(tabName, placeholder, initialVal, callback)
+                local sf = tabFrames[tabName].Frame
+                local box = Instance.new("TextBox")
+                box.Size = UDim2.new(1, -10, 0, 38)
+                box.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
+                box.TextColor3 = Color3.fromRGB(255, 220, 220)
+                box.TextSize = 12
+                box.Font = Enum.Font.GothamBold
+                box.PlaceholderText = placeholder
+                box.Text = tostring(initialVal)
+                box.Parent = sf
+
+                local corner = Instance.new("UICorner", box)
+                corner.CornerRadius = UDim.new(0, 10)
+
+                local stroke = Instance.new("UIStroke", box)
+                stroke.Color = Color3.fromRGB(200, 50, 50)
+                stroke.Thickness = 1.5
+
+                box.FocusLost:Connect(function(enterPressed)
+                    local num = tonumber(box.Text)
+                    if num then
+                        callback(num)
+                        box.Text = tostring(num)
+                    else
+                        box.Text = tostring(initialVal)
+                    end
+                end)
+                return box
+            end
+
+            -- ==================== TAB 1: CAMLOCK ====================
             local avatarCamlockBtn = nil
-            createButton(tabCamlock, "Camlock Button: OFF", function(btn)
-                getgenv().CrackThis.Aiming.CamlockEnabled = not getgenv().CrackThis.Aiming.CamlockEnabled
-                btn.Text = getgenv().CrackThis.Aiming.CamlockEnabled and "Camlock Button: ON" or "Camlock Button: OFF"
+            createTabButton("Camlock", "Camlock Button: OFF", function(btn)
+                config.Aiming.CamlockEnabled = not config.Aiming.CamlockEnabled
+                btn.Text = config.Aiming.CamlockEnabled and "Camlock Button: ON" or "Camlock Button: OFF"
                 
-                if getgenv().CrackThis.Aiming.CamlockEnabled then
+                if config.Aiming.CamlockEnabled then
                     if not avatarCamlockBtn then
                         avatarCamlockBtn = Instance.new("ImageButton")
                         avatarCamlockBtn.Name = "AvatarCamlockButton"
-                        avatarCamlockBtn.Size = UDim2.new(0, 180, 0, 95) -- Wider button as requested
+                        avatarCamlockBtn.Size = UDim2.new(0, 180, 0, 95) -- Wider camlock button
                         avatarCamlockBtn.Position = UDim2.new(1, -195, 0, 210)
                         avatarCamlockBtn.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
                         avatarCamlockBtn.BackgroundTransparency = 0.15
@@ -454,8 +470,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         avStroke.Thickness = 3
                         avStroke.Parent = avatarCamlockBtn
 
-                        local avGradient = Instance.new("UIGradient")
-                        avGradient.Parent = avStroke
+                        local avGradient = Instance.new("UIGradient", avStroke)
 
                         local avText = Instance.new("TextLabel", avatarCamlockBtn)
                         avText.Size = UDim2.new(1, 0, 1, 0)
@@ -463,7 +478,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         avText.Font = Enum.Font.GothamBold
                         avText.Text = "CAMLOCK"
                         avText.TextColor3 = Color3.fromRGB(255, 255, 255)
-                        avText.TextSize = 14
+                        avText.TextSize = 16
                         avText.TextStrokeTransparency = 0
 
                         task.spawn(function()
@@ -480,8 +495,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         end)
 
                         avatarCamlockBtn.MouseButton1Click:Connect(function()
-                            getgenv().CrackThis.Aiming.CamlockActive = not (getgenv().CrackThis.Aiming.CamlockActive or false)
-                            avStroke.Color = getgenv().CrackThis.Aiming.CamlockActive and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 50, 50)
+                            config.Aiming.CamlockActive = not (config.Aiming.CamlockActive or false)
+                            avStroke.Color = config.Aiming.CamlockActive and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 50, 50)
                         end)
                     else
                         avatarCamlockBtn.Visible = true
@@ -490,270 +505,489 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     if avatarCamlockBtn then
                         avatarCamlockBtn.Visible = false
                     end
-                    getgenv().CrackThis.Aiming.CamlockActive = false
+                    config.Aiming.CamlockActive = false
                 end
             end)
 
-            local predBox = Instance.new("TextBox", tabCamlock)
-            predBox.Size = UDim2.new(1, -10, 0, 38)
-            predBox.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-            predBox.TextColor3 = Color3.fromRGB(255, 220, 220)
-            predBox.TextSize = 12
-            predBox.Font = Enum.Font.GothamBold
-            predBox.PlaceholderText = "Prediction (e.g. 0.03)"
-            predBox.Text = tostring(getgenv().CrackThis.Aiming.Prediction)
-            Instance.new("UICorner", predBox).CornerRadius = UDim.new(0, 10)
-            local pStroke = Instance.new("UIStroke", predBox)
-            pStroke.Color = Color3.fromRGB(200, 50, 50)
-            pStroke.Thickness = 1.5
-
-            predBox.FocusLost:Connect(function()
-                local val = tonumber(predBox.Text)
-                if val then
-                    getgenv().CrackThis.Aiming.Prediction = val
-                else
-                    predBox.Text = tostring(getgenv().CrackThis.Aiming.Prediction)
-                end
+            createSliderBox("Camlock", "Prediction (e.g. 0.03)", config.Aiming.PredictionVal, function(val)
+                config.Aiming.PredictionVal = val
+                config.Aiming.PredictionX = val
+                config.Aiming.PredictionY = val
             end)
 
-            local smoothBox = Instance.new("TextBox", tabCamlock)
-            smoothBox.Size = UDim2.new(1, -10, 0, 38)
-            smoothBox.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-            smoothBox.TextColor3 = Color3.fromRGB(255, 220, 220)
-            smoothBox.TextSize = 12
-            smoothBox.Font = Enum.Font.GothamBold
-            smoothBox.PlaceholderText = "Smoothness (e.g. 0.1)"
-            smoothBox.Text = tostring(getgenv().CrackThis.Aiming.Smoothness)
-            Instance.new("UICorner", smoothBox).CornerRadius = UDim.new(0, 10)
-            local sStroke = Instance.new("UIStroke", smoothBox)
-            sStroke.Color = Color3.fromRGB(200, 50, 50)
-            sStroke.Thickness = 1.5
-
-            smoothBox.FocusLost:Connect(function()
-                local val = tonumber(smoothBox.Text)
-                if val then
-                    getgenv().CrackThis.Aiming.Smoothness = val
-                else
-                    smoothBox.Text = tostring(getgenv().CrackThis.Aiming.Smoothness)
-                end
+            createSliderBox("Camlock", "Smoothness (0 = Instant)", config.Aiming.Smoothness, function(val)
+                config.Aiming.Smoothness = val
             end)
 
-            -- ==========================================
-            -- TAB 2: SILENT AIM
-            -- ==========================================
-            createButton(tabSilent, "Silent Aim: OFF", function(btn)
-                getgenv().CrackThis.Aiming.Enabled = not getgenv().CrackThis.Aiming.Enabled
-                btn.Text = getgenv().CrackThis.Aiming.Enabled and "Silent Aim: ON" or "Silent Aim: OFF"
+            -- ==================== TAB 2: SILENT AIM ====================
+            createTabButton("SilentAim", "Silent Aim: ON", function(btn)
+                config.Aiming.Enabled = not config.Aiming.Enabled
+                btn.Text = config.Aiming.Enabled and "Silent Aim: ON" or "Silent Aim: OFF"
             end)
 
-            local methods = {"Raycast", "Namecall", "Framework", "MouseIndex", "Index", "Hookmetamethod", "All"}
+            local methods = {"Raycast", "Namecall", "Framework", "All"}
             local methodIdx = 1
-            createButton(tabSilent, "Method: Raycast", function(btn)
+            createTabButton("SilentAim", "Method: Raycast", function(btn)
                 methodIdx = methodIdx % #methods + 1
-                getgenv().CrackThis.Aiming.MethodMode = methods[methodIdx]
-                btn.Text = "Method: " .. getgenv().CrackThis.Aiming.MethodMode
+                config.Aiming.MethodMode = methods[methodIdx]
+                btn.Text = "Method: " .. config.Aiming.MethodMode
             end)
 
-            local targetTypes = {"Players", "Bots", "Both"}
-            local tTypeIdx = 3
-            createButton(tabSilent, "Target Type: Both", function(btn)
-                tTypeIdx = tTypeIdx % #targetTypes + 1
-                getgenv().CrackThis.Aiming.TargetType = targetTypes[tTypeIdx]
-                btn.Text = "Target Type: " .. getgenv().CrackThis.Aiming.TargetType
-            end)
-
-            local sizeBox = Instance.new("TextBox", tabSilent)
-            sizeBox.Size = UDim2.new(1, -10, 0, 38)
-            sizeBox.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-            sizeBox.TextColor3 = Color3.fromRGB(255, 220, 220)
-            sizeBox.TextSize = 12
-            sizeBox.Font = Enum.Font.GothamBold
-            sizeBox.PlaceholderText = "FOV Size (e.g. 600)"
-            sizeBox.Text = tostring(getgenv().CrackThis.Aiming.FOV)
-            Instance.new("UICorner", sizeBox).CornerRadius = UDim.new(0, 10)
-            local bStroke = Instance.new("UIStroke", sizeBox)
-            bStroke.Color = Color3.fromRGB(200, 50, 50)
-            bStroke.Thickness = 1.5
-
-            sizeBox.FocusLost:Connect(function()
-                local num = tonumber(sizeBox.Text)
-                if num and num > 10 and num < 3000 then
-                    getgenv().CrackThis.Aiming.FOV = num
-                    fovCircleFrame.Size = UDim2.new(0, getgenv().CrackThis.Aiming.FOV * 2, 0, getgenv().CrackThis.Aiming.FOV * 2)
-                else
-                    sizeBox.Text = tostring(getgenv().CrackThis.Aiming.FOV)
+            createSliderBox("SilentAim", "Silent Aim FOV Size (e.g. 600)", config.Aiming.FOV, function(val)
+                if val > 10 and val < 2000 then
+                    config.Aiming.FOV = val
+                    fovCircleFrame.Size = UDim2.new(0, val * 2, 0, val * 2)
                 end
             end)
 
-            -- ==========================================
-            -- TAB 3: MISC (Sliders with drag & keyboard input)
-            -- ==========================================
-            local function createSlider(parent, labelName, min, max, defaultVal, callback)
-                local container = Instance.new("Frame", parent)
-                container.Size = UDim2.new(1, -10, 0, 55)
-                container.BackgroundColor3 = Color3.fromRGB(25, 12, 12)
-                Instance.new("UICorner", container).CornerRadius = UDim.new(0, 10)
-                local str = Instance.new("UIStroke", container)
-                str.Color = Color3.fromRGB(200, 50, 50)
-                str.Thickness = 1.5
+            -- ==================== TAB 3: MISC ====================
+            createTabButton("Misc", "Speed Boost: OFF", function(btn)
+                config.Misc.SpeedEnabled = not config.Misc.SpeedEnabled
+                btn.Text = config.Misc.SpeedEnabled and "Speed Boost: ON" or "Speed Boost: OFF"
+            end)
 
-                local title = Instance.new("TextLabel", container)
-                title.Size = UDim2.new(1, -10, 0, 20)
-                title.Position = UDim2.new(0, 5, 0, 2)
-                title.BackgroundTransparency = 1
-                title.Font = Enum.Font.GothamBold
-                title.TextColor3 = Color3.fromRGB(255, 220, 220)
-                title.TextSize = 11
-                title.TextXAlignment = Enum.TextXAlignment.Left
-                title.Text = labelName .. ": " .. defaultVal
+            createSliderBox("Misc", "Speed Value (e.g. 16 to 100)", config.Misc.SpeedValue, function(val)
+                config.Misc.SpeedValue = val
+            end)
 
-                local bar = Instance.new("Frame", container)
-                bar.Size = UDim2.new(1, -20, 0, 6)
-                bar.Position = UDim2.new(0, 10, 0, 35)
-                bar.BackgroundColor3 = Color3.fromRGB(40, 20, 20)
-                Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
+            createTabButton("Misc", "Jump Boost: OFF", function(btn)
+                config.Misc.JumpEnabled = not config.Misc.JumpEnabled
+                btn.Text = config.Misc.JumpEnabled and "Jump Boost: ON" or "Jump Boost: OFF"
+            end)
 
-                local fill = Instance.new("Frame", bar)
-                fill.Size = UDim2.new((defaultVal - min) / (max - min), 0, 1, 0)
-                fill.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-                Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
+            createSliderBox("Misc", "Jump Power Value (e.g. 50 to 200)", config.Misc.JumpValue, function(val)
+                config.Misc.JumpValue = val
+            end)
 
-                local dragging = false
-                bar.InputBegan:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                        dragging = true
-                    end
+            -- ==================== TAB 4: ESP ====================
+            createTabButton("ESP", "ESP & Chams: ON", function(btn)
+                config.ESP.Enabled = not config.ESP.Enabled
+                btn.Text = config.ESP.Enabled and "ESP & Chams: ON" or "ESP & Chams: OFF"
+            end)
+
+            createTabButton("ESP", "Self Chams (Red/Black Rainbow): ON", function(btn)
+                config.ESP.SelfESP = not config.ESP.SelfESP
+                btn.Text = config.ESP.SelfESP and "Self Chams: ON" or "Self Chams: OFF"
+            end)
+
+            createTabButton("ESP", "Tracers: OFF", function(btn)
+                config.ESP.Tracers = not config.ESP.Tracers
+                btn.Text = config.ESP.Tracers and "Tracers: ON" or "Tracers: OFF"
+            end)
+
+            createTabButton("ESP", "Hitbox Chams: OFF", function(btn)
+                config.ESP.Hitbox = not config.ESP.Hitbox
+                btn.Text = config.ESP.Hitbox and "Hitbox Chams: ON" or "Hitbox Chams: OFF"
+            end)
+
+            createTabButton("ESP", "Skeleton: OFF", function(btn)
+                config.ESP.Skeleton = not config.ESP.Skeleton
+                btn.Text = config.ESP.Skeleton and "Skeleton: ON" or "Skeleton: OFF"
+            end)
+
+            createTabButton("ESP", "Display Name: OFF", function(btn)
+                config.ESP.DisplayName = not config.ESP.DisplayName
+                btn.Text = config.ESP.DisplayName and "Display Name: ON" or "Display Name: OFF"
+            end)
+
+            -- Emote Button
+            local emoteBtn = Instance.new("ImageButton")
+            emoteBtn.Name = "EmoteButton"
+            emoteBtn.Size = UDim2.new(0, 88, 0, 88)
+            emoteBtn.Position = UDim2.new(1, -100, 0, 110)
+            emoteBtn.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
+            emoteBtn.BackgroundTransparency = 0.15
+            emoteBtn.Active = true
+            emoteBtn.Parent = screenGui
+            makeDraggable(emoteBtn)
+
+            local emoteImageBg = Instance.new("ImageLabel", emoteBtn)
+            emoteImageBg.Size = UDim2.new(1, 0, 1, 0)
+            emoteImageBg.BackgroundTransparency = 1
+            emoteImageBg.Image = "rbxassetid://76550748284492"
+            emoteImageBg.ScaleType = Enum.ScaleType.Slice
+            emoteImageBg.SliceCenter = Rect.new(100, 100, 100, 100)
+            emoteImageBg.ZIndex = emoteBtn.ZIndex - 1
+
+            local emoteCorner = Instance.new("UICorner", emoteBtn)
+            emoteCorner.CornerRadius = UDim.new(0, 6)
+
+            local emoteStroke = Instance.new("UIStroke", emoteBtn)
+            emoteStroke.Color = Color3.fromRGB(255, 255, 255)
+            emoteStroke.Thickness = 3
+
+            pcall(function()
+                local content = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+                if content then
+                    emoteBtn.Image = content
+                end
+            end)
+
+            emoteBtn.MouseButton1Click:Connect(function()
+                pcall(function()
+                    GuiService:SetEmotesMenuOpen(not GuiService:GetEmotesMenuOpen())
                 end)
-
-                UserInputService.InputEnded:Connect(function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                        dragging = false
-                    end
-                end)
-
-                UserInputService.InputChanged:Connect(function(input)
-                    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-                        local pos = math.clamp((input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X, 0, 1)
-                        local val = math.floor(min + (max - min) * pos)
-                        fill.Size = UDim2.new(pos, 0, 1, 0)
-                        title.Text = labelName .. ": " .. val
-                        callback(val)
-                    end
-                end)
-            end
-
-            createButton(tabMisc, "Speed Toggle: OFF", function(btn)
-                getgenv().CrackThis.Misc.SpeedEnabled = not getgenv().CrackThis.Misc.SpeedEnabled
-                btn.Text = getgenv().CrackThis.Misc.SpeedEnabled and "Speed Toggle: ON" or "Speed Toggle: OFF"
             end)
 
-            createSlider(tabMisc, "WalkSpeed", 16, 200, 16, function(val)
-                getgenv().CrackThis.Misc.SpeedValue = val
-            end)
+            local topInfoFrame = Instance.new("Frame", screenGui)
+            topInfoFrame.Size = UDim2.new(0, 280, 0, 55)
+            topInfoFrame.Position = UDim2.new(0.5, -140, 0, 10)
+            topInfoFrame.BackgroundColor3 = Color3.fromRGB(15, 10, 10)
+            topInfoFrame.BackgroundTransparency = 0.2
+            topInfoFrame.Visible = false
 
-            createButton(tabMisc, "Jump Toggle: OFF", function(btn)
-                getgenv().CrackThis.Misc.JumpEnabled = not getgenv().CrackThis.Misc.JumpEnabled
-                btn.Text = getgenv().CrackThis.Misc.JumpEnabled and "Jump Toggle: ON" or "Jump Toggle: OFF"
-            end)
+            local infoBgImage = Instance.new("ImageLabel", topInfoFrame)
+            infoBgImage.Size = UDim2.new(1, 0, 1, 0)
+            infoBgImage.BackgroundTransparency = 1
+            infoBgImage.Image = "rbxassetid://76550748284492"
+            infoBgImage.ScaleType = Enum.ScaleType.Slice
+            infoBgImage.SliceCenter = Rect.new(100, 100, 100, 100)
+            infoBgImage.ZIndex = topInfoFrame.ZIndex - 1
 
-            createSlider(tabMisc, "JumpPower", 50, 300, 50, function(val)
-                getgenv().CrackThis.Misc.JumpValue = val
-            end)
+            local infoCorner = Instance.new("UICorner", topInfoFrame)
+            infoCorner.CornerRadius = UDim.new(0, 8)
 
-            -- ==========================================
-            -- TAB 4: ESP (Red and Black Rainbow style)
-            -- ==========================================
-            createButton(tabEsp, "ESP Tracers: OFF", function(btn)
-                getgenv().CrackThis.ESP.Tracers = not getgenv().CrackThis.ESP.Tracers
-                btn.Text = getgenv().CrackThis.ESP.Tracers and "ESP Tracers: ON" or "ESP Tracers: OFF"
-            end)
+            local infoStroke = Instance.new("UIStroke", topInfoFrame)
+            infoStroke.Thickness = 2
+            infoStroke.Color = Color3.fromRGB(255, 0, 0)
 
-            createButton(tabEsp, "Hitbox / Chams: OFF", function(btn)
-                getgenv().CrackThis.ESP.Hitbox = not getgenv().CrackThis.ESP.Hitbox
-                btn.Text = getgenv().CrackThis.ESP.Hitbox and "Hitbox / Chams: ON" or "Hitbox / Chams: OFF"
-            end)
+            local targetAvatar = Instance.new("ImageLabel", topInfoFrame)
+            targetAvatar.Size = UDim2.new(0, 45, 0, 45)
+            targetAvatar.Position = UDim2.new(0, 5, 0, 5)
+            targetAvatar.BackgroundColor3 = Color3.fromRGB(30, 20, 20)
+            targetAvatar.Image = ""
+            
+            local avatarCorner = Instance.new("UICorner", targetAvatar)
+            avatarCorner.CornerRadius = UDim.new(0, 6)
 
-            createButton(tabEsp, "Skeleton ESP: OFF", function(btn)
-                getgenv().CrackThis.ESP.Skeleton = not getgenv().CrackThis.ESP.Skeleton
-                btn.Text = getgenv().CrackThis.ESP.Skeleton and "Skeleton ESP: ON" or "Skeleton ESP: OFF"
-            end)
+            local topInfoLabel = Instance.new("TextLabel", topInfoFrame)
+            topInfoLabel.Size = UDim2.new(1, -55, 1, 0)
+            topInfoLabel.Position = UDim2.new(0, 55, 0, 0)
+            topInfoLabel.BackgroundTransparency = 1
+            topInfoLabel.TextColor3 = Color3.fromRGB(255, 220, 220)
+            topInfoLabel.TextSize = 12
+            topInfoLabel.Font = Enum.Font.GothamBold
+            topInfoLabel.TextXAlignment = Enum.TextXAlignment.Left
+            topInfoLabel.TextWrapped = true
+            topInfoLabel.Text = "TARGET: NONE"
 
-            createButton(tabEsp, "Display Name ESP: OFF", function(btn)
-                getgenv().CrackThis.ESP.DisplayName = not getgenv().CrackThis.ESP.DisplayName
-                btn.Text = getgenv().CrackThis.ESP.DisplayName and "Display Name ESP: ON" or "Display Name ESP: OFF"
-            end)
+            local tracerFrame = Instance.new("Frame", screenGui)
+            tracerFrame.Name = "TracerLine"
+            tracerFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+            tracerFrame.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+            tracerFrame.BorderSizePixel = 0
+            tracerFrame.Visible = false
 
-            createButton(tabEsp, "Self ESP (Always ON): ON", function(btn)
-                getgenv().CrackThis.ESP.SelfESP = not getgenv().CrackThis.ESP.SelfESP
-                btn.Text = getgenv().CrackThis.ESP.SelfESP and "Self ESP (Always ON): ON" or "Self ESP: OFF"
-            end)
+            local currentTargetModel = nil
+            local lockedHitPart = nil
+            local smoothedPosition = Vector3.new(0, 0, 0)
 
-            -- Universal Target Verification Utility (Players + Bots support)
+            -- Universal Target Filter (Players or Dummies/Bots across any game)
             local function isValidTarget(char)
-                if not char or char == LocalPlayer.Character then 
-                    if getgenv().CrackThis.ESP.SelfESP then return true end
-                    return false 
+                if not char or char == LocalPlayer.Character then return false end
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if not humanoid or humanoid.Health <= 0 then return false end
+                
+                -- Detect if it's a Player or a Bot/Dummy
+                local player = Players:GetPlayerFromCharacter(char)
+                if player then
+                    return true
+                else
+                    -- Check if it functions like a dummy/bot with HumanoidRootPart or Head
+                    local root = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Head")
+                    if root then
+                        return true
+                    end
                 end
-                local hum = char:FindFirstChildOfClass("Humanoid")
-                if not hum or hum.Health <= 0 then return false end
-
-                local tType = getgenv().CrackThis.Aiming.TargetType or "Both"
-                local isPlayer = Players:GetPlayerFromCharacter(char) ~= nil
-
-                if tType == "Players" and not isPlayer then return false end
-                if tType == "Bots" and isPlayer then return false end
-                return true
+                return false
             end
 
-            -- Main Loop for Speed/Jump and ESP Red-Black Rainbow Effects
-            local rainbowHue = 0
+            local function getTarget()
+                local bestTarget = nil
+                local bestMetric = math.huge
+                local screenCenter = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+
+                local function evaluate(char)
+                    if isValidTarget(char) then
+                        local targetPart = char:FindFirstChild(config.Aiming.HitPart) or char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Head")
+                        if targetPart then
+                            local screenPoint, onScreen = camera:WorldToViewportPoint(targetPart.Position)
+                            if onScreen then
+                                local screenPos2D = Vector2.new(screenPoint.X, screenPoint.Y)
+                                local distFromCenter = (screenPos2D - screenCenter).Magnitude
+                                
+                                if distFromCenter <= config.Aiming.FOV then
+                                    local humanoid = char:FindFirstChildOfClass("Humanoid")
+                                    local mode = config.Aiming.TargetMode or "Closest"
+                                    if mode == "Closest" then
+                                        if distFromCenter < bestMetric then
+                                            bestMetric = distFromCenter
+                                            bestTarget = char
+                                        end
+                                    elseif mode == "LowHealth" then
+                                        if humanoid and humanoid.Health < bestMetric then
+                                            bestMetric = humanoid.Health
+                                            bestTarget = char
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+
+                pcall(function()
+                    -- Scan players
+                    for _, p in ipairs(Players:GetPlayers()) do
+                        if p.Character then evaluate(p.Character) end
+                    end
+                    -- Scan workspace models for dummies/bots in any game
+                    for _, obj in ipairs(workspace:GetChildren()) do
+                        if obj:IsA("Model") and obj:FindFirstChildOfClass("Humanoid") then
+                            evaluate(obj)
+                        end
+                    end
+                end)
+
+                return bestTarget
+            end
+
+            -- High performance visual rendering loop (Chams, Self-ESP, Misc, Camlock, Silent Aim)
+            local frameCounter = 0
             RunService.RenderStepped:Connect(function(dt)
                 pcall(function()
-                    rainbowHue = (rainbowHue + dt * 0.5) % 1
-                    local rainbowColor = Color3.fromHSV(0, 1, math.abs(math.sin(tick() * 3))) -- Red & Black vibe
+                    frameCounter = frameCounter + 1
 
-                    -- Misc WalkSpeed & JumpPower Enforcement
+                    -- Misc: Speed & Jump Power handling
                     local char = LocalPlayer.Character
                     if char then
                         local hum = char:FindFirstChildOfClass("Humanoid")
                         if hum then
-                            if getgenv().CrackThis.Misc.SpeedEnabled then
-                                hum.WalkSpeed = getgenv().CrackThis.Misc.SpeedValue
+                            if config.Misc.SpeedEnabled then
+                                hum.WalkSpeed = config.Misc.SpeedValue
                             end
-                            if getgenv().CrackThis.Misc.JumpEnabled then
-                                hum.JumpPower = getgenv().CrackThis.Misc.JumpValue
-                                hum.UseJumpPower = true
+                            if config.Misc.JumpEnabled then
+                                hum.JumpPower = config.Misc.JumpValue
                             end
                         end
                     end
 
-                    -- ESP Red and Black Chams / Highlighting execution
-                    for _, p in ipairs(Players:GetPlayers()) do
-                        local c = p.Character
-                        if c and (isValidTarget(c) or (p == LocalPlayer and getgenv().CrackThis.ESP.SelfESP)) then
-                            local highlight = c:FindFirstChild("AbvxRainbowESP")
-                            if getgenv().CrackThis.ESP.Hitbox then
-                                if not highlight then
-                                    highlight = Instance.new("Highlight")
-                                    highlight.Name = "AbvxRainbowESP"
-                                    highlight.Adornee = c
-                                    highlight.Parent = c
+                    -- Self ESP & Chams (Red and Black rainbow style as requested)
+                    if config.ESP.SelfESP and char then
+                        local timeTick = tick() * 2
+                        local rainbowColor = Color3.fromRGB(
+                            math.floor(math.sin(timeTick) * 127 + 128),
+                            0,
+                            math.floor(math.cos(timeTick) * 127 + 128)
+                        )
+                        for _, part in ipairs(char:GetChildren()) do
+                            if part:IsA("BasePart") then
+                                local handle = part:FindFirstChild("ABVX_SelfChams")
+                                if not handle then
+                                    handle = Instance.new("BoxHandleAdornment")
+                                    handle.Name = "ABVX_SelfChams"
+                                    handle.Adornee = part
+                                    handle.AlwaysOnTop = true
+                                    handle.ZIndex = 10
+                                    handle.Size = part.Size + Vector3.new(0.05, 0.05, 0.05)
+                                    handle.Parent = part
                                 end
-                                highlight.FillColor = Color3.fromRGB(20, 0, 0)
-                                highlight.OutlineColor = rainbowColor
-                                highlight.FillTransparency = 0.5
-                                highlight.OutlineTransparency = 0
-                            else
-                                if highlight then highlight:Destroy() end
+                                handle.Color3 = rainbowColor
+                                handle.Transparency = 0.3
                             end
                         end
+                    else
+                        if char then
+                            for _, part in ipairs(char:GetChildren()) do
+                                if part:IsA("BasePart") then
+                                    local handle = part:FindFirstChild("ABVX_SelfChams")
+                                    if handle then handle:Destroy() end
+                                end
+                            end
+                        end
+                    end
+
+                    local aimingCfg = config.Aiming
+                    if not aimingCfg.Enabled then
+                        currentTargetModel = nil
+                        lockedHitPart = nil
+                        fovCircleFrame.Visible = false
+                        topInfoFrame.Visible = false
+                        tracerFrame.Visible = false
+                        return
+                    end
+
+                    fovCircleFrame.Visible = aimingCfg.FOVCircle
+
+                    if aimingCfg.CamlockEnabled and aimingCfg.CamlockActive and currentTargetModel then
+                        local hum = currentTargetModel:FindFirstChildOfClass("Humanoid")
+                        if not hum or hum.Health <= 0 then
+                            if not lockedHitPart or not lockedHitPart.Parent then
+                                currentTargetModel = nil
+                                lockedHitPart = nil
+                            end
+                        else
+                            local partName = aimingCfg.HitPart or "HumanoidRootPart"
+                            lockedHitPart = currentTargetModel:FindFirstChild(partName) or currentTargetModel:FindFirstChild("HumanoidRootPart") or currentTargetModel:FindFirstChild("Head")
+                        end
+                    else
+                        currentTargetModel = getTarget()
+                        if currentTargetModel then
+                            local partName = aimingCfg.HitPart or "HumanoidRootPart"
+                            lockedHitPart = currentTargetModel:FindFirstChild(partName) or currentTargetModel:FindFirstChild("HumanoidRootPart") or currentTargetModel:FindFirstChild("Head")
+                        else
+                            lockedHitPart = nil
+                        end
+                    end
+
+                    if aimingCfg.CamlockEnabled and aimingCfg.CamlockActive and currentTargetModel and lockedHitPart then
+                        local camTargetPos = lockedHitPart.Position
+                        local currentCamPos = camera.CFrame.Position
+                        if aimingCfg.Smoothness > 0 then
+                            camera.CFrame = camera.CFrame:Lerp(CFrame.new(currentCamPos, camTargetPos), math.clamp(dt * (1 / aimingCfg.Smoothness * 10), 0.1, 1))
+                        else
+                            camera.CFrame = CFrame.new(currentCamPos, camTargetPos)
+                        end
+                    end
+
+                    if currentTargetModel and lockedHitPart then
+                        fovStroke.Color = Color3.fromRGB(0, 255, 0)
+
+                        local rawTargetPos = lockedHitPart.Position
+                        local linearVelocity = lockedHitPart.AssemblyLinearVelocity or Vector3.new(0, 0, 0)
+                        local distance = (rawTargetPos - camera.CFrame.Position).Magnitude
+                        local dynamicPred = math.clamp(distance / 500 * 0.035, 0.015, 0.045)
+                        local pred = aimingCfg.Prediction and (aimingCfg.PredictionVal or dynamicPred) or 0
+                        smoothedPosition = rawTargetPos + Vector3.new(linearVelocity.X * pred, linearVelocity.Y * pred, linearVelocity.Z * pred)
+
+                        local humanoid = currentTargetModel:FindFirstChildOfClass("Humanoid")
+                        local rootPart = currentTargetModel:FindFirstChild("HumanoidRootPart") or lockedHitPart
+                        
+                        if humanoid then
+                            local distanceMeters = 0
+                            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                                distanceMeters = math.floor((LocalPlayer.Character.HumanoidRootPart.Position - rootPart.Position).Magnitude / 3.5)
+                            end
+
+                            local targetPlayer = Players:GetPlayerFromCharacter(currentTargetModel)
+                            local nameStr = targetPlayer and targetPlayer.DisplayName or currentTargetModel.Name
+
+                            if aimingCfg.ShowInfo then
+                                topInfoLabel.Text = string.format("NAME: %s\nHP: %d/%d | DIST: %dm\nPART: %s", nameStr, math.floor(humanoid.Health), math.floor(humanoid.MaxHealth), distanceMeters, lockedHitPart.Name)
+                                
+                                if targetPlayer and (frameCounter % 30 == 0) then
+                                    pcall(function()
+                                        local thumb = Players:GetUserThumbnailAsync(targetPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+                                        if thumb then targetAvatar.Image = thumb end
+                                    end)
+                                elseif not targetPlayer then
+                                    targetAvatar.Image = "rbxassetid://110314637434659"
+                                end
+                                topInfoFrame.Visible = true
+                            else
+                                topInfoFrame.Visible = false
+                            end
+
+                            if aimingCfg.ShowTracers then
+                                local screenPos, onScreen = camera:WorldToViewportPoint(smoothedPosition)
+                                if onScreen then
+                                    local screenCenterBottom = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y)
+                                    local targetPos2D = Vector2.new(screenPos.X, screenPos.Y)
+                                    local dist2D = (targetPos2D - screenCenterBottom).Magnitude
+                                    local midpoint = (screenCenterBottom + targetPos2D) / 2
+                                    
+                                    tracerFrame.Size = UDim2.new(0, dist2D, 0, 2)
+                                    tracerFrame.Position = UDim2.new(0, midpoint.X, 0, midpoint.Y)
+                                    tracerFrame.Rotation = math.deg(math.atan2(targetPos2D.Y - screenCenterBottom.Y, targetPos2D.X - screenCenterBottom.X))
+                                    tracerFrame.Visible = true
+                                else
+                                    tracerFrame.Visible = false
+                                end
+                            else
+                                tracerFrame.Visible = false
+                            end
+                        else
+                            lockedHitPart = nil
+                            currentTargetModel = nil
+                            topInfoFrame.Visible = false
+                            tracerFrame.Visible = false
+                        end
+                    else
+                        fovStroke.Color = Settings.CircleColor
+                        topInfoFrame.Visible = false
+                        tracerFrame.Visible = false
+                        smoothedPosition = Vector3.new(0, 0, 0)
                     end
                 end)
             end)
 
-            print("✅ ABVX UNIVERSAL MULTI-METHOD HUB LOADED SUCCESSFULLY!")
+            local function getTargetPosition()
+                if not lockedHitPart then
+                    return Vector3.new()
+                end
+                if smoothedPosition == Vector3.new(0, 0, 0) then
+                    return lockedHitPart.Position
+                end
+                return smoothedPosition
+            end
+
+            -- Universal Hook for Raycasting and Game Methods
+            pcall(function()
+                local oldRaycast
+                oldRaycast = hookfunction(workspace.Raycast, function(ws, origin, direction, raycastParams)
+                    if config.Aiming.Enabled and lockedHitPart then
+                        local mode = config.Aiming.MethodMode or "Raycast"
+                        if mode == "Raycast" or mode == "All" then
+                            local originPos = (typeof(origin) == "Vector3") and origin or camera.CFrame.Position
+                            local targetPos = getTargetPosition()
+                            local newDirection = (targetPos - originPos)
+                            return oldRaycast(ws, originPos, newDirection, raycastParams)
+                        end
+                    end
+                    return oldRaycast(ws, origin, direction, raycastParams)
+                end)
+            end)
+
+            pcall(function()
+                local mt = getrawmetatable(game)
+                setreadonly(mt, false)
+                local oldNamecall = mt.__namecall
+
+                mt.__namecall = newcclosure(function(self, ...)
+                    local method = getnamecallmethod()
+                    local args = {...}
+
+                    if config.Aiming.Enabled and lockedHitPart then
+                        local mode = config.Aiming.MethodMode or "Raycast"
+                        if mode == "Namecall" or mode == "Framework" or mode == "All" then
+                            if method == "FireServer" or method == "InvokeServer" then
+                                local targetPos = getTargetPosition()
+                                for i, arg in ipairs(args) do
+                                    local t = typeof(arg)
+                                    if t == "Vector3" then
+                                        args[i] = targetPos
+                                    elseif t == "CFrame" then
+                                        args[i] = CFrame.new(arg.Position, targetPos)
+                                    elseif t == "table" then
+                                        for k, v in pairs(arg) do
+                                            if typeof(v) == "Vector3" then
+                                                arg[k] = targetPos
+                                            elseif typeof(v) == "CFrame" then
+                                                arg[k] = CFrame.new(v.Position, targetPos)
+                                            end
+                                        end
+                                    end
+                                end
+                                return oldNamecall(self, unpack(args))
+                            end
+                        end
+                    end
+
+                    return oldNamecall(self, ...)
+                end)
+            end)
         end
     end
 end)
 
-print("✅ ABVX LOADER INITIALIZED!")
+print("✅ ABVX ADVANCED MULTI-TAB UNIVERSAL SCRIPT LOADED!")
