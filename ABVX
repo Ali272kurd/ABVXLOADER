@@ -1,6 +1,6 @@
 -- ==================================================
 -- ABVX LOADER & ADVANCED MULTI-TAB UNIVERSAL SCRIPT
--- [FIXED & FULLY FUNCTIONAL / ZERO LAG]
+-- [ULTIMATE FIX & POLISHED VISUALS]
 -- ==================================================
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -143,7 +143,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             StarterGui:SetCore("SendNotification", {
                 Title = "Abvx Loader",
-                Text = "Advanced Suite Loaded Successfully (Fully Fixed)",
+                Text = "Advanced Suite Loaded Successfully (Bug-Free)",
                 Duration = 5,
             })
 
@@ -351,7 +351,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 local scrollingFrame = Instance.new("ScrollingFrame", contentFramesContainer)
                 scrollingFrame.Size = UDim2.new(1, 0, 1, 0)
                 scrollingFrame.BackgroundTransparency = 1
-                scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 520)
+                scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 560)
                 scrollingFrame.ScrollBarThickness = 3
                 scrollingFrame.Visible = (i == 1)
 
@@ -441,8 +441,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     if not avatarCamlockBtn then
                         avatarCamlockBtn = Instance.new("ImageButton")
                         avatarCamlockBtn.Name = "AvatarCamlockButton"
-                        avatarCamlockBtn.Size = UDim2.new(0, 210, 0, 110) -- Wider and bigger as requested
-                        avatarCamlockBtn.Position = UDim2.new(1, -230, 0, 210)
+                        avatarCamlockBtn.Size = UDim2.new(0, 220, 0, 110) -- Extra wide & large
+                        avatarCamlockBtn.Position = UDim2.new(1, -240, 0, 210)
                         avatarCamlockBtn.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
                         avatarCamlockBtn.BackgroundTransparency = 0.15
                         avatarCamlockBtn.Active = true
@@ -546,7 +546,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Text = config.Misc.SpeedEnabled and "Speed Boost: ON" or "Speed Boost: OFF"
             end)
 
-            createSliderBox("Misc", "Speed Value (e.g. 16 to 100)", config.Misc.SpeedValue, function(val)
+            createSliderBox("Misc", "Speed Value (16 to 200)", config.Misc.SpeedValue, function(val)
                 config.Misc.SpeedValue = val
             end)
 
@@ -555,7 +555,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Text = config.Misc.JumpEnabled and "Jump Boost: ON" or "Jump Boost: OFF"
             end)
 
-            createSliderBox("Misc", "Jump Power Value (e.g. 50 to 200)", config.Misc.JumpValue, function(val)
+            createSliderBox("Misc", "Jump Power Value (50 to 300)", config.Misc.JumpValue, function(val)
                 config.Misc.JumpValue = val
             end)
 
@@ -565,7 +565,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Text = config.ESP.Enabled and "ESP & Chams: ON" or "ESP & Chams: OFF"
             end)
 
-            createTabButton("ESP", "Self Chams (Red/Black Rainbow): ON", function(btn)
+            createTabButton("ESP", "Self Chams (White Wavy & Rainbow): ON", function(btn)
                 config.ESP.SelfESP = not config.ESP.SelfESP
                 btn.Text = config.ESP.SelfESP and "Self Chams: ON" or "Self Chams: OFF"
             end)
@@ -738,6 +738,17 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 return bestTarget
             end
 
+            -- Universal ESP storage tables
+            local espCache = {}
+
+            local function clearESP()
+                for _, data in pairs(espCache) do
+                    if data.Highlight then data.Highlight:Destroy() end
+                    if data.Billboard then data.Billboard:Destroy() end
+                end
+                espCache = {}
+            end
+
             local frameCounter = 0
             RunService.RenderStepped:Connect(function(dt)
                 pcall(function()
@@ -756,13 +767,13 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         end
                     end
 
+                    -- Self Chams (White wavy transitioning to light/dark rainbow)
                     if config.ESP.SelfESP and char then
-                        local timeTick = tick() * 2
-                        local rainbowColor = Color3.fromRGB(
-                            math.floor(math.sin(timeTick) * 127 + 128),
-                            0,
-                            math.floor(math.cos(timeTick) * 127 + 128)
-                        )
+                        local t = tick() * 3
+                        -- Custom wavy palette: White -> Light Dark -> Rainbow -> Dark White
+                        local waveFactor = (math.sin(t) + 1) / 2
+                        local selfColor = Color3.fromHSV((tick() % 5) / 5, 0.7 + (waveFactor * 0.3), 0.3 + (waveFactor * 0.7))
+                        
                         for _, part in ipairs(char:GetChildren()) do
                             if part:IsA("BasePart") then
                                 local handle = part:FindFirstChild("ABVX_SelfChams")
@@ -772,11 +783,11 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                                     handle.Adornee = part
                                     handle.AlwaysOnTop = true
                                     handle.ZIndex = 10
-                                    handle.Size = part.Size + Vector3.new(0.05, 0.05, 0.05)
+                                    handle.Size = part.Size + Vector3.new(0.06, 0.06, 0.06)
                                     handle.Parent = part
                                 end
-                                handle.Color3 = rainbowColor
-                                handle.Transparency = 0.3
+                                handle.Color3 = selfColor
+                                handle.Transparency = 0.2 + (math.sin(t * 2) * 0.1)
                             end
                         end
                     else
@@ -790,9 +801,85 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         end
                     end
 
+                    -- Universal ESP & Chams Renderer for Others
+                    if config.ESP.Enabled then
+                        local activeModels = {}
+                        
+                        local function processModel(model, isPlr)
+                            if not isValidTarget(model) then return end
+                            activeModels[model] = true
+                            
+                            local data = espCache[model]
+                            if not data then
+                                data = {}
+                                local hl = Instance.new("Highlight")
+                                hl.Name = "ABVX_ESP_Highlight"
+                                hl.Adornee = model
+                                hl.FillTransparency = 0.5
+                                hl.OutlineTransparency = 0
+                                hl.Parent = CoreGui
+                                data.Highlight = hl
+
+                                local bb = Instance.new("BillboardGui")
+                                bb.Name = "ABVX_ESP_Tag"
+                                bb.Size = UDim2.new(0, 120, 0, 40)
+                                bb.StudsOffset = Vector3.new(0, 3, 0)
+                                bb.AlwaysOnTop = true
+                                bb.Adornee = model:FindFirstChild("Head") or model:FindFirstChild("HumanoidRootPart")
+                                
+                                local textLbl = Instance.new("TextLabel", bb)
+                                textLbl.Size = UDim2.new(1, 0, 1, 0)
+                                textLbl.BackgroundTransparency = 1
+                                textLbl.Font = Enum.Font.GothamBold
+                                textLbl.TextSize = 13
+                                textLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+                                textLbl.TextStrokeTransparency = 0
+                                data.TextLabel = textLbl
+                                bb.Parent = CoreGui
+                                data.Billboard = bb
+
+                                espCache[model] = data
+                            end
+
+                            if data.Highlight then
+                                data.Highlight.Enabled = config.ESP.Hitbox
+                                local t = tick() * 2
+                                data.Highlight.FillColor = Color3.fromHSV((t % 4) / 4, 1, 1)
+                                data.Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+                            end
+
+                            if data.Billboard and data.TextLabel then
+                                data.Billboard.Enabled = config.ESP.DisplayName
+                                local humanoid = model:FindFirstChildOfClass("Humanoid")
+                                local plr = Players:GetPlayerFromCharacter(model)
+                                local nameTxt = plr and plr.DisplayName or model.Name
+                                local hp = humanoid and math.floor(humanoid.Health) or 100
+                                data.TextLabel.Text = string.format("%s\n[HP: %d]", nameTxt, hp)
+                            end
+                        end
+
+                        for _, p in ipairs(Players:GetPlayers()) do
+                            if p.Character then processModel(p.Character, true) end
+                        end
+                        for _, obj in ipairs(workspace:GetChildren()) do
+                            if obj:IsA("Model") and obj:FindFirstChildOfClass("Humanoid") then
+                                processModel(obj, false)
+                            end
+                        end
+
+                        for mdl, data in pairs(espCache) do
+                            if not activeModels[mdl] or not mdl.Parent then
+                                if data.Highlight then data.Highlight:Destroy() end
+                                if data.Billboard then data.Billboard:Destroy() end
+                                espCache[mdl] = nil
+                            end
+                        end
+                    else
+                        clearESP()
+                    end
+
                     local aimingCfg = config.Aiming
                     
-                    -- Only run targeting loop if either Silent Aim or Camlock Active is ON
                     if not aimingCfg.Enabled and not aimingCfg.CamlockActive then
                         currentTargetModel = nil
                         lockedHitPart = nil
@@ -970,4 +1057,4 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
     end
 end)
 
-print("✅ ABVX FULLY FIXED & OPTIMIZED SCRIPT LOADED!")
+print("✅ ABVX FULLY PATCHED & OPTIMIZED SCRIPT LOADED!")
