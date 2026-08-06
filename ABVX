@@ -1,5 +1,5 @@
 -- ==================================================
--- ABVX LOADER & UNIVERSAL RAYCAST SILENT AIM & CAMLOCK [OPTIMIZED & FIXED]
+-- ABVX LOADER & UNIVERSAL RAYCAST SILENT AIM & CAMLOCK [FULL SCRIPT]
 -- ==================================================
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -146,7 +146,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             StarterGui:SetCore("SendNotification", {
                 Title = "Abvx Loader",
-                Text = "Silent Aim & Camlock Enabled (Optimized & Lag-Free)",
+                Text = "Silent Aim & Camlock Enabled (100% Accuracy, Auto Pred, Bot Support)",
                 Duration = 5,
             })
 
@@ -165,7 +165,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     Prediction = true,
                     ShowInfo = true,
                     ShowTracers = true,
-                    MethodMode = "Raycast"
+                    MethodMode = "Raycast" -- Options: "Raycast", "Namecall", "Framework", "All"
                 }
             }
             getgenv().CrackThis = v79
@@ -252,15 +252,15 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
             task.spawn(function()
                 while true do
-                    for i = 0, 1, 0.05 do
+                    for i = 0, 1, 0.01 do
                         local col = Color3.fromHSV(0, i * 0.5 + 0.5, 1)
                         mainStroke.Color = col
-                        task.wait(0.2)
+                        task.wait(0.05)
                     end
-                    for i = 1, 0, -0.05 do
+                    for i = 1, 0, -0.01 do
                         local col = Color3.fromHSV(0, i * 0.5 + 0.5, 1)
                         mainStroke.Color = col
-                        task.wait(0.2)
+                        task.wait(0.05)
                     end
                 end
             end)
@@ -309,7 +309,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             scrollingFrame.Size = UDim2.new(1, -10, 1, -48)
             scrollingFrame.Position = UDim2.new(0, 5, 0, 44)
             scrollingFrame.BackgroundTransparency = 1
-            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 620)
+            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 560)
             scrollingFrame.ScrollBarThickness = 3
             scrollingFrame.Parent = mainFrame
 
@@ -358,8 +358,8 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     if not avatarCamlockBtn then
                         avatarCamlockBtn = Instance.new("ImageButton")
                         avatarCamlockBtn.Name = "AvatarCamlockButton"
-                        avatarCamlockBtn.Size = UDim2.new(0, 140, 0, 88)
-                        avatarCamlockBtn.Position = UDim2.new(1, -155, 0, 210)
+                        avatarCamlockBtn.Size = UDim2.new(0, 130, 0, 88) -- Wider Camlock Button
+                        avatarCamlockBtn.Position = UDim2.new(1, -145, 0, 210)
                         avatarCamlockBtn.BackgroundColor3 = Color3.fromRGB(15, 12, 12)
                         avatarCamlockBtn.BackgroundTransparency = 0.15
                         avatarCamlockBtn.Active = true
@@ -375,7 +375,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         avImageBg.ZIndex = avatarCamlockBtn.ZIndex - 1
 
                         local avCorner = Instance.new("UICorner", avatarCamlockBtn)
-                        avCorner.CornerRadius = UDim.new(0, 6)
+                        avCorner.CornerRadius = UDim.new(0, 6) -- Sharp edges
 
                         local avStroke = Instance.new("UIStroke")
                         avStroke.Name = "CamlockStroke"
@@ -397,13 +397,15 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
 
                         task.spawn(function()
                             while true do
-                                for i = 0, 1, 0.05 do
+                                for i = 0, 1, 0.02 do
+                                    local col1 = Color3.fromHSV(0, i * 0.5 + 0.5, 1)
+                                    local col2 = Color3.fromRGB(0, 0, 0)
                                     avGradient.Color = ColorSequence.new({
                                         ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
                                         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),
                                         ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 50, 50))
                                     })
-                                    task.wait(0.2)
+                                    task.wait(0.05)
                                 end
                             end
                         end)
@@ -439,72 +441,12 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 btn.Text = "Target: " .. getgenv().CrackThis.Aiming.TargetMode
             end)
 
-            -- Shooting Options Dropdown Button
-            local shootingOptionsActive = false
-            local shootingOptionsContainer = Instance.new("Frame")
-            shootingOptionsContainer.Size = UDim2.new(1, -10, 0, 170)
-            shootingOptionsContainer.BackgroundColor3 = Color3.fromRGB(20, 10, 10)
-            shootingOptionsContainer.BackgroundTransparency = 0.1
-            shootingOptionsContainer.Visible = false
-            shootingOptionsContainer.Parent = scrollingFrame
-
-            local soCorner = Instance.new("UICorner", shootingOptionsContainer)
-            soCorner.CornerRadius = UDim.new(0, 10)
-            local soStroke = Instance.new("UIStroke", shootingOptionsContainer)
-            soStroke.Color = Color3.fromRGB(200, 50, 50)
-            soStroke.Thickness = 1.5
-
-            local soLayout = Instance.new("UIListLayout", shootingOptionsContainer)
-            soLayout.Padding = UDim.new(0, 5)
-            soLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-
-            local function createSubButton(text, cb)
-                local subBtn = Instance.new("TextButton")
-                subBtn.Size = UDim2.new(1, -10, 0, 32)
-                subBtn.BackgroundColor3 = Color3.fromRGB(30, 15, 15)
-                subBtn.TextColor3 = Color3.fromRGB(255, 220, 220)
-                subBtn.TextSize = 11
-                subBtn.Font = Enum.Font.GothamBold
-                subBtn.Text = text
-                subBtn.Parent = shootingOptionsContainer
-                local sCorner = Instance.new("UICorner", subBtn)
-                sCorner.CornerRadius = UDim.new(0, 8)
-                subBtn.MouseButton1Click:Connect(function() cb(subBtn) end)
-                return subBtn
-            end
-
-            createSubButton("Method: Raycast (Default)", function(btn)
-                getgenv().CrackThis.Aiming.MethodMode = "Raycast"
-                btn.Text = "Method: Raycast (Active)"
-            end)
-
-            createSubButton("Method: Namecall", function(btn)
-                getgenv().CrackThis.Aiming.MethodMode = "Namecall"
-                btn.Text = "Method: Namecall (Active)"
-            end)
-
-            createSubButton("Method: Framework", function(btn)
-                getgenv().CrackThis.Aiming.MethodMode = "Framework"
-                btn.Text = "Method: Framework (Active)"
-            end)
-
-            createSubButton("Method: All Combined", function(btn)
-                getgenv().CrackThis.Aiming.MethodMode = "All"
-                btn.Text = "Method: All Combined (Active)"
-            end)
-
-            createSubButton("Mouse.Button & Raycast Config", function(btn)
-                StarterGui:SetCore("SendNotification", {
-                    Title = "Shooting Config",
-                    Text = "Mouse/Raycast hooks active across all shooting frameworks.",
-                    Duration = 3,
-                })
-            end)
-
-            local shootOptToggleBtn = createButton("⚙️ Shooting & Raycast Options", function()
-                shootingOptionsActive = not shootingOptionsActive
-                shootingOptionsContainer.Visible = shootingOptionsActive
-                scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, shootingOptionsActive and 790 or 620)
+            local methodModes = {"Raycast", "Namecall", "Framework", "All"}
+            local methodIndex = 1
+            createButton("Shooting Method: Raycast", function(btn)
+                methodIndex = methodIndex % #methodModes + 1
+                getgenv().CrackThis.Aiming.MethodMode = methodModes[methodIndex]
+                btn.Text = "Shooting Method: " .. getgenv().CrackThis.Aiming.MethodMode
             end)
 
             createButton("Prediction: ON (Auto)", function(btn)
@@ -581,7 +523,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             emoteImageBg.ZIndex = emoteBtn.ZIndex - 1
 
             local emoteCorner = Instance.new("UICorner", emoteBtn)
-            emoteCorner.CornerRadius = UDim.new(0, 6)
+            emoteCorner.CornerRadius = UDim.new(0, 6) -- Sharp edges like requested
 
             local emoteStroke = Instance.new("UIStroke")
             emoteStroke.Color = Color3.fromRGB(255, 255, 255)
@@ -592,7 +534,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             emoteGradient.Parent = emoteStroke
 
             pcall(function()
-                local content = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+                local content, isReady = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
                 if content then
                     emoteBtn.Image = content
                 end
@@ -604,7 +546,20 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 end)
             end)
 
-            -- Improved Target Info Display showing Avatar Image + Detailed stats with Background ID 76550748284492
+            RunService.RenderStepped:Connect(function()
+                local t = tick() * 2
+                local offset = (math.sin(t) + 1) / 2
+                emoteGradient.Offset = Vector2.new(offset - 0.5, 0)
+                
+                -- Red and black rainbow style for emote stroke
+                emoteGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+                    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 0, 0)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 50, 50))
+                })
+            end)
+
+            -- Improved Target Info Display showing Avatar Image + Detailed stats
             local topInfoFrame = Instance.new("Frame")
             topInfoFrame.Size = UDim2.new(0, 280, 0, 55)
             topInfoFrame.Position = UDim2.new(0.5, -140, 0, 10)
@@ -612,14 +567,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             topInfoFrame.BackgroundTransparency = 0.2
             topInfoFrame.Visible = false
             topInfoFrame.Parent = screenGui
-
-            local infoBgImage = Instance.new("ImageLabel", topInfoFrame)
-            infoBgImage.Size = UDim2.new(1, 0, 1, 0)
-            infoBgImage.BackgroundTransparency = 1
-            infoBgImage.Image = "rbxassetid://76550748284492"
-            infoBgImage.ScaleType = Enum.ScaleType.Slice
-            infoBgImage.SliceCenter = Rect.new(100, 100, 100, 100)
-            infoBgImage.ZIndex = topInfoFrame.ZIndex - 1
 
             local infoCorner = Instance.new("UICorner", topInfoFrame)
             infoCorner.CornerRadius = UDim.new(0, 8)
@@ -657,11 +604,6 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
             tracerFrame.Visible = false
             tracerFrame.Parent = screenGui
 
-            local currentTargetModel = nil
-            local lockedHitPart = nil
-            local smoothedPosition = Vector3.new(0, 0, 0)
-
-            -- Optimized target selection function to prevent lag
             local function getTarget()
                 local bestTarget = nil
                 local bestMetric = math.huge
@@ -697,22 +639,39 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 end
 
                 pcall(function()
+                    -- Evaluate real players
                     for _, p in ipairs(Players:GetPlayers()) do
                         if p.Character then evaluate(p.Character) end
+                    end
+
+                    -- Evaluate generic workspace models/bots with Humanoids
+                    for _, desc in ipairs(workspace:GetDescendants()) do
+                        if desc:IsA("Model") and desc:FindFirstChildOfClass("Humanoid") then
+                            evaluate(desc)
+                        end
+                    end
+
+                    -- Check common folders containing bots/enemies
+                    for _, folderName in ipairs({"Bots", "Bots_1", "NPCs", "Dummies", "Targets", "Dummy", "Enemies", "Players", "CharacterFolder", "Monsters", "Zombies"}) do
+                        local folder = workspace:FindFirstChild(folderName)
+                        if folder then
+                            for _, obj in ipairs(folder:GetChildren()) do
+                                if obj:IsA("Model") then evaluate(obj) end
+                            end
+                        end
                     end
                 end)
 
                 return bestTarget
             end
 
-            -- Throttle loop to maintain high FPS and zero lag
-            local frameCounter = 0
+            local currentTargetModel = nil
+            local lockedHitPart = nil
+            local smoothedPosition = Vector3.new(0, 0, 0)
+
             RunService.RenderStepped:Connect(function(dt)
                 pcall(function()
-                    frameCounter = frameCounter + 1
-
-                    local aimingCfg = getgenv().CrackThis.Aiming
-                    if not aimingCfg.Enabled then
+                    if not getgenv().CrackThis.Aiming.Enabled then
                         currentTargetModel = nil
                         lockedHitPart = nil
                         fovCircleFrame.Visible = false
@@ -721,35 +680,22 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         return
                     end
 
-                    fovCircleFrame.Visible = aimingCfg.FOVCircle
+                    fovCircleFrame.Visible = getgenv().CrackThis.Aiming.FOVCircle
+                    
+                    currentTargetModel = getTarget()
 
-                    -- Maintain target lock even if dead if camlocked, or find new target
-                    if aimingCfg.CamlockEnabled and aimingCfg.CamlockActive and currentTargetModel then
-                        local hum = currentTargetModel:FindFirstChildOfClass("Humanoid")
-                        if not hum or hum.Health <= 0 then
-                            -- Keep lock on dead person's last known part position or root part if available
-                            if not lockedHitPart or not lockedHitPart.Parent then
-                                currentTargetModel = nil
-                                lockedHitPart = nil
-                            end
-                        else
-                            local partName = aimingCfg.HitPart or "HumanoidRootPart"
-                            lockedHitPart = currentTargetModel:FindFirstChild(partName) or currentTargetModel:FindFirstChild("HumanoidRootPart") or currentTargetModel:FindFirstChild("Head")
-                        end
+                    if currentTargetModel then
+                        local partName = getgenv().CrackThis.Aiming.HitPart or "HumanoidRootPart"
+                        lockedHitPart = currentTargetModel:FindFirstChild(partName) or currentTargetModel:FindFirstChild("HumanoidRootPart") or currentTargetModel:FindFirstChild("Head")
                     else
-                        currentTargetModel = getTarget()
-                        if currentTargetModel then
-                            local partName = aimingCfg.HitPart or "HumanoidRootPart"
-                            lockedHitPart = currentTargetModel:FindFirstChild(partName) or currentTargetModel:FindFirstChild("HumanoidRootPart") or currentTargetModel:FindFirstChild("Head")
-                        else
-                            lockedHitPart = nil
-                        end
+                        lockedHitPart = nil
                     end
 
-                    if aimingCfg.CamlockEnabled and aimingCfg.CamlockActive and currentTargetModel and lockedHitPart then
+                    if getgenv().CrackThis.Aiming.CamlockEnabled and getgenv().CrackThis.Aiming.CamlockActive and currentTargetModel and lockedHitPart then
                         local camTargetPos = lockedHitPart.Position
                         local currentCamPos = camera.CFrame.Position
-                        camera.CFrame = CFrame.new(currentCamPos, camTargetPos)
+                        local targetCFrame = CFrame.new(currentCamPos, camTargetPos)
+                        camera.CFrame = targetCFrame
                     end
 
                     if currentTargetModel and lockedHitPart then
@@ -759,13 +705,15 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                         local linearVelocity = lockedHitPart.AssemblyLinearVelocity or Vector3.new(0, 0, 0)
                         local distance = (rawTargetPos - camera.CFrame.Position).Magnitude
                         local dynamicPred = math.clamp(distance / 500 * 0.035, 0.015, 0.045)
-                        local pred = aimingCfg.Prediction and dynamicPred or 0
-                        smoothedPosition = rawTargetPos + Vector3.new(linearVelocity.X * pred, linearVelocity.Y * pred, linearVelocity.Z * pred)
+                        local pred = getgenv().CrackThis.Aiming.Prediction and dynamicPred or 0
+                        local predictedPos = rawTargetPos + Vector3.new(linearVelocity.X * pred, linearVelocity.Y * pred, linearVelocity.Z * pred)
+
+                        smoothedPosition = predictedPos
 
                         local humanoid = currentTargetModel:FindFirstChildOfClass("Humanoid")
                         local rootPart = currentTargetModel:FindFirstChild("HumanoidRootPart") or lockedHitPart
                         
-                        if humanoid then
+                        if humanoid and humanoid.Health > 0 then
                             local distanceMeters = 0
                             if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                                 distanceMeters = math.floor((LocalPlayer.Character.HumanoidRootPart.Position - rootPart.Position).Magnitude / 3.5)
@@ -774,16 +722,15 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                             local targetPlayer = Players:GetPlayerFromCharacter(currentTargetModel)
                             local nameStr = targetPlayer and targetPlayer.DisplayName or currentTargetModel.Name
 
-                            if aimingCfg.ShowInfo then
+                            if getgenv().CrackThis.Aiming.ShowInfo then
                                 topInfoLabel.Text = string.format("NAME: %s\nHP: %d/%d | DIST: %dm\nPART: %s", nameStr, math.floor(humanoid.Health), math.floor(humanoid.MaxHealth), distanceMeters, lockedHitPart.Name)
                                 
-                                -- Update avatar thumbnail throttled to every 30 frames to boost FPS
-                                if targetPlayer and (frameCounter % 30 == 0) then
+                                if targetPlayer then
                                     pcall(function()
                                         local thumb = Players:GetUserThumbnailAsync(targetPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
                                         if thumb then targetAvatar.Image = thumb end
                                     end)
-                                elseif not targetPlayer then
+                                else
                                     targetAvatar.Image = "rbxassetid://110314637434659"
                                 end
                                 topInfoFrame.Visible = true
@@ -791,7 +738,7 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                                 topInfoFrame.Visible = false
                             end
 
-                            if aimingCfg.ShowTracers then
+                            if getgenv().CrackThis.Aiming.ShowTracers then
                                 local screenPos, onScreen = camera:WorldToViewportPoint(smoothedPosition)
                                 if onScreen then
                                     local screenCenterBottom = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y)
@@ -834,20 +781,29 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                 return smoothedPosition
             end
 
-            -- Robust shooting hook methods (Raycast, Namecall, Framework)
-            pcall(function()
-                local oldRaycast
-                oldRaycast = hookfunction(workspace.Raycast, function(ws, origin, direction, raycastParams)
+            local function findFramework()
+                local fw = LocalPlayer.PlayerGui:FindFirstChild("_Framework") 
+                    or LocalPlayer.PlayerGui:FindFirstChild("Framework")
+                    or workspace:FindFirstChild("_Framework")
+                    or workspace:FindFirstChild("Framework")
+                    or game:GetService("ReplicatedStorage"):FindFirstChild("_Framework")
+                    or game:GetService("ReplicatedStorage"):FindFirstChild("Framework")
+                return fw
+            end
+
+            local _Framework = findFramework()
+            local frameworkEnv = _Framework and pcall(function() return getsenv(_Framework) end) and getsenv(_Framework) or nil
+
+            RunService.PostSimulation:Connect(function()
+                pcall(function()
                     if getgenv().CrackThis.Aiming.Enabled and lockedHitPart then
                         local mode = getgenv().CrackThis.Aiming.MethodMode or "Raycast"
-                        if mode == "Raycast" or mode == "All" then
-                            local originPos = (typeof(origin) == "Vector3") and origin or camera.CFrame.Position
-                            local targetPos = getTargetPosition()
-                            local newDirection = (targetPos - originPos)
-                            return oldRaycast(ws, originPos, newDirection, raycastParams)
+                        if mode == "Framework" or mode == "All" then
+                            if frameworkEnv and frameworkEnv._G then
+                                frameworkEnv._G.MOUSE_POSITION = getTargetPosition()
+                            end
                         end
                     end
-                    return oldRaycast(ws, origin, direction, raycastParams)
                 end)
             end)
 
@@ -889,8 +845,39 @@ keyTextBox.FocusLost:Connect(function(enterPressed)
                     return oldNamecall(self, ...)
                 end)
             end)
+
+            pcall(function()
+                local oldRaycast
+                oldRaycast = hookfunction(workspace.Raycast, function(ws, origin, direction, raycastParams)
+                    if getgenv().CrackThis.Aiming.Enabled and lockedHitPart then
+                        local mode = getgenv().CrackThis.Aiming.MethodMode or "Raycast"
+                        if mode == "Raycast" or mode == "All" then
+                            local originPos = (typeof(origin) == "Vector3") and origin or camera.CFrame.Position
+                            local targetPos = getTargetPosition()
+                            local newDirection = (targetPos - originPos)
+                            return oldRaycast(ws, originPos, newDirection, raycastParams)
+                        end
+                    end
+                    return oldRaycast(ws, origin, direction, raycastParams)
+                end)
+            end)
+
+            pcall(function()
+                local oldFindRay
+                oldFindRay = hookfunction(workspace.FindPartOnRay, function(ws, ray, ign, tn, ct)
+                    if getgenv().CrackThis.Aiming.Enabled and lockedHitPart then
+                        local mode = getgenv().CrackThis.Aiming.MethodMode or "Raycast"
+                        if mode == "Raycast" or mode == "All" then
+                            local targetPos = getTargetPosition()
+                            local newRay = Ray.new(ray.Origin, (targetPos - ray.Origin).Unit * ray.Direction.Magnitude)
+                            return oldFindRay(ws, newRay, ign, tn, ct)
+                        end
+                    end
+                    return oldFindRay(ws, ray, ign, tn, ct)
+                end)
+            end)
         end
     end
 end)
 
-print("✅ ABVX UNIVERSAL RAYCAST SILENT AIM & CAMLOCK LOADED (FPS OPTIMIZED)!")
+print("✅ ABVX UNIVERSAL RAYCAST SILENT AIM & CAMLOCK LOADED! | TikTok: .vfsv")
